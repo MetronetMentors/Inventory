@@ -113,32 +113,30 @@
     </div>
 
     <script>
-        // PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL HERE
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfybyJ4fUi_K1J-MckIzjgi8-3bTcd3in6Ab0nccNzWfNHKaV-rwXc99RhSE1UcUSTDZpsiw/exec"; 
+        // BACKEND PIPELINE SOURCE URL LINK
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJ4fUi_K1J-MckIzjgi8-3bTcd3in6Ab0nccNzWfNHKaV-rwXc99RhSE1UcUsTDZpsiw/exec"; 
         
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            if(event) event.currentTarget.classList.add('active');
+            if(window.event && window.event.currentTarget) window.event.currentTarget.classList.add('active');
         }
 
         function attemptLogin() {
             const passInput = document.getElementById('sysPassword').value;
             if (passInput === "Metro2020") {
                 document.getElementById('loginOverlay').style.display = 'none';
-                refreshSystemData(); // Load live database records instantly upon successful login
+                refreshSystemData();
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
         }
 
-        // PULL REFRESHED CONTENT FROM GOOGLE SHEETS FOR DROPDOWNS AND TABLES
         function refreshSystemData() {
             fetch(WEB_APP_URL + "?action=getData")
             .then(res => res.json())
             .then(data => {
-                // Populate Dropdowns
                 let techSelect = document.getElementById('techSelect');
                 techSelect.innerHTML = '<option value="">-- Choose Tech --</option>';
                 data.techs.forEach(t => techSelect.innerHTML += `<option value="${t}">${t}</option>`);
@@ -153,7 +151,6 @@
                     adjustSelect.innerHTML += optionHtml;
                 });
 
-                // Populate Live Inventory Table
                 let invTable = document.getElementById('inventoryTableBody');
                 invTable.innerHTML = '';
                 if(data.inventory.length === 0) invTable.innerHTML = '<tr><td colspan="2">No inventory listed.</td></tr>';
@@ -161,18 +158,16 @@
                     invTable.innerHTML += `<tr><td>${item.name}</td><td><strong>${item.qty}</strong></td></tr>`;
                 });
 
-                // Populate Audit Trail Log Table
                 let logTable = document.getElementById('logsTableBody');
                 logTable.innerHTML = '';
                 if(data.logs.length === 0) logTable.innerHTML = '<tr><td colspan="4">No entries recorded.</td></tr>';
-                data.logs.reverse().forEach(log => { // Most recent logs at the top
+                data.logs.reverse().forEach(log => {
                     logTable.innerHTML += `<tr><td>${log.date}</td><td>${log.tech}</td><td>${log.item}</td><td>${log.reason}</td></tr>`;
                 });
             })
             .catch(err => console.error("Error updating interface fields:", err));
         }
 
-        // DISBURSEMENT FORM SUBMISSION
         document.getElementById('issueForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const payload = {
@@ -186,12 +181,11 @@
             .then(() => {
                 alert("Log request processed!");
                 document.getElementById('reasonInput').value = '';
-                refreshSystemData(); // Instantly update stock table and logs view
+                refreshSystemData();
                 switchTab('inventoryTab');
             });
         });
 
-        // MANAGEMENT FUNCTION: ADD NEW TECHNICIAN
         function addNewTech() {
             const name = document.getElementById('newTechName').value.trim();
             if(!name) return alert("Please type a name.");
@@ -204,7 +198,6 @@
             });
         }
 
-        // MANAGEMENT FUNCTION: ADD NEW HARDWARE CATALOG ITEM
         function addNewHardware() {
             const name = document.getElementById('newHardwareName').value.trim();
             if(!name) return alert("Please enter a hardware item model profile.");
@@ -217,7 +210,6 @@
             });
         }
 
-        // MANAGEMENT FUNCTION: ADJUST QUANTITIES DIRECTLY
         function adjustStockLevel() {
             const item = document.getElementById('adjustItemSelect').value;
             const qty = document.getElementById('adjustQtyInput').value.trim();
