@@ -172,7 +172,7 @@
             // Validate password securely via backend call
             fetch(WEB_APP_URL, {
                 method: 'POST',
-                mode: 'cors',
+                mode: 'no-cors',
                 body: JSON.stringify({ action: "getData", password: passInput })
             })
             .then(res => res.json())
