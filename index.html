@@ -129,8 +129,27 @@
         function attemptLogin() {
             const passInput = document.getElementById('sysPassword').value;
             if (passInput === "Metro2020") {
-                document.getElementById('loginOverlay').style.display = 'none';
-                renderInterface();
+                // Change the button so you know it's working
+                const loginBtn = document.querySelector('.login-box button');
+                loginBtn.innerText = "Syncing with Google Sheets...";
+                loginBtn.disabled = true;
+
+                // Pull live data from your sheet
+                fetch(WEB_APP_URL + "?action=getData")
+                .then(res => res.json())
+                .then(data => {
+                    localTechs = data.techs || [];
+                    localInventory = data.inventory || [];
+                    localLogs = data.logs || [];
+                    
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    renderInterface();
+                })
+                .catch(err => {
+                    alert("Network error connecting to Google Sheets.");
+                    loginBtn.innerText = "Unlock System";
+                    loginBtn.disabled = false;
+                });
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
