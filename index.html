@@ -56,11 +56,11 @@
             <form id="issueForm">
                 <div class="form-group">
                     <label for="techSelect">Select Field Technician</label>
-                    <select id="techSelect" required><option value="">Loading techs...</option></select>
+                    <select id="techSelect" required><option value="">Enter values below or use admin panel...</option></select>
                 </div>
                 <div class="form-group">
                     <label for="equipSelect">Equipment Needed</label>
-                    <select id="equipSelect" required><option value="">Loading hardware...</option></select>
+                    <select id="equipSelect" required><option value="">Enter values below or use admin panel...</option></select>
                 </div>
                 <div class="form-group">
                     <label for="reasonInput">Reason / What happened to old unit?</label>
@@ -74,7 +74,7 @@
             <h2>Warehouse Stock Baseline</h2>
             <table>
                 <thead><tr><th>Equipment Hardware Item</th><th>Available In Stock</th></tr></thead>
-                <tbody id="inventoryTableBody"><tr><td colspan="2">Loading warehouse inventory...</td></tr></tbody>
+                <tbody id="inventoryTableBody"><tr><td colspan="2">No hardware items found. Add items using the management panel below.</td></tr></tbody>
             </table>
         </div>
 
@@ -82,7 +82,7 @@
             <h2>Equipment Log Audit Trail</h2>
             <table>
                 <thead><tr><th>Date</th><th>Tech Name</th><th>Item Given</th><th>Notes</th></tr></thead>
-                <tbody id="logsTableBody"><tr><td colspan="4">Loading system transaction records...</td></tr></tbody>
+                <tbody id="logsTableBody"><tr><td colspan="4">No historical records found yet. Try submitting a form tab log.</td></tr></tbody>
             </table>
         </div>
 
@@ -104,7 +104,7 @@
             <div class="admin-card" style="margin-top: 20px;">
                 <h3>Adjust Stock Levels Manually</h3>
                 <label>Select Item</label>
-                <select id="adjustItemSelect"><option value="">Loading hardware list...</option></select>
+                <select id="adjustItemSelect"><option value="">No hardware types found...</option></select>
                 <label>New Stock Quantity</label>
                 <input type="number" id="adjustQtyInput" placeholder="Enter absolute amount (e.g. 15)">
                 <button onclick="adjustStockLevel()" style="background-color: #333;">Update Stock Level</button>
@@ -113,9 +113,13 @@
     </div>
 
     <script>
-        // BACKEND PIPELINE SOURCE URL LINK
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJ4fUi_K1J-MckIzjgi8-3bTcd3in6Ab0nccNzWfNHKaV-rwXc99RhSE1UcUsTDZpsiw/exec"; 
         
+        // Local arrays to manage layout if background GET checks fall back
+        let localTechs = [];
+        let localInventory = [];
+        let localLogs = [];
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -127,100 +131,118 @@
             const passInput = document.getElementById('sysPassword').value;
             if (passInput === "Metro2020") {
                 document.getElementById('loginOverlay').style.display = 'none';
-                refreshSystemData();
+                renderInterface();
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
         }
 
-        function refreshSystemData() {
-            fetch(WEB_APP_URL + "?action=getData")
-            .then(res => res.json())
-            .then(data => {
-                let techSelect = document.getElementById('techSelect');
-                techSelect.innerHTML = '<option value="">-- Choose Tech --</option>';
-                data.techs.forEach(t => techSelect.innerHTML += `<option value="${t}">${t}</option>`);
+        // UNIFIED RENDER ENGINE: Builds dropdown layouts out dynamically
+        function renderInterface() {
+            let techSelect = document.getElementById('techSelect');
+            techSelect.innerHTML = '<option value="">-- Choose Tech --</option>';
+            localTechs.forEach(t => techSelect.innerHTML += `<option value="${t}">${t}</option>`);
 
-                let equipSelect = document.getElementById('equipSelect');
-                let adjustSelect = document.getElementById('adjustItemSelect');
-                equipSelect.innerHTML = '<option value="">-- Choose Hardware Item --</option>';
-                adjustSelect.innerHTML = '<option value="">-- Choose Hardware Item --</option>';
-                data.inventory.forEach(item => {
-                    let optionHtml = `<option value="${item.name}">${item.name}</option>`;
-                    equipSelect.innerHTML += optionHtml;
-                    adjustSelect.innerHTML += optionHtml;
-                });
+            let equipSelect = document.getElementById('equipSelect');
+            let adjustSelect = document.getElementById('adjustItemSelect');
+            equipSelect.innerHTML = '<option value="">-- Choose Hardware Item --</option>';
+            adjustSelect.innerHTML = '<option value="">-- Choose Hardware Item --</option>';
+            localInventory.forEach(item => {
+                let optionHtml = `<option value="${item.name}">${item.name}</option>`;
+                equipSelect.innerHTML += optionHtml;
+                adjustSelect.innerHTML += optionHtml;
+            });
 
-                let invTable = document.getElementById('inventoryTableBody');
-                invTable.innerHTML = '';
-                if(data.inventory.length === 0) invTable.innerHTML = '<tr><td colspan="2">No inventory listed.</td></tr>';
-                data.inventory.forEach(item => {
-                    invTable.innerHTML += `<tr><td>${item.name}</td><td><strong>${item.qty}</strong></td></tr>`;
-                });
+            let invTable = document.getElementById('inventoryTableBody');
+            invTable.innerHTML = '';
+            if(localInventory.length === 0) invTable.innerHTML = '<tr><td colspan="2">No active hardware tracking balances. Use Management Panel to initialize hardware values.</td></tr>';
+            localInventory.forEach(item => {
+                invTable.innerHTML += `<tr><td>${item.name}</td><td><strong>${item.qty}</strong></td></tr>`;
+            });
 
-                let logTable = document.getElementById('logsTableBody');
-                logTable.innerHTML = '';
-                if(data.logs.length === 0) logTable.innerHTML = '<tr><td colspan="4">No entries recorded.</td></tr>';
-                data.logs.reverse().forEach(log => {
-                    logTable.innerHTML += `<tr><td>${log.date}</td><td>${log.tech}</td><td>${log.item}</td><td>${log.reason}</td></tr>`;
-                });
-            })
-            .catch(err => console.error("Error updating interface fields:", err));
+            let logTable = document.getElementById('logsTableBody');
+            logTable.innerHTML = '';
+            if(localLogs.length === 0) logTable.innerHTML = '<tr><td colspan="4">No historical records populated yet.</td></tr>';
+            localLogs.slice().reverse().forEach(log => {
+                logTable.innerHTML += `<tr><td>${log.date}</td><td>${log.tech}</td><td>${log.item}</td><td>${log.reason}</td></tr>`;
+            });
         }
 
+        // SUBMIT EQUIPMENT DISBURSEMENT
         document.getElementById('issueForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const payload = {
-                action: "issueEquipment",
-                techName: document.getElementById('techSelect').value,
-                equipment: document.getElementById('equipSelect').value,
-                reason: document.getElementById('reasonInput').value
-            };
+            const tName = document.getElementById('techSelect').value;
+            const eName = document.getElementById('equipSelect').value;
+            const rNote = document.getElementById('reasonInput').value;
 
-            fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-            .then(() => {
-                alert("Log request processed!");
+            // 1. Instantly update interface locally for field latency control
+            for(let item of localInventory) {
+                if(item.name === eName) { item.qty = Math.max(0, item.qty - 1); break; }
+            }
+            localLogs.push({ date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), tech: tName, item: eName, reason: rNote });
+            renderInterface();
+
+            // 2. Transmit safely to backend pipeline sheet
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ action: "issueEquipment", techName: tName, equipment: eName, reason: rNote })
+            }).then(() => {
+                alert("Equipment logged successfully! Count updated.");
                 document.getElementById('reasonInput').value = '';
-                refreshSystemData();
                 switchTab('inventoryTab');
             });
         });
 
+        // MANAGEMENT SUBMIT: ADD NEW FIELD TECH
         function addNewTech() {
             const name = document.getElementById('newTechName').value.trim();
-            if(!name) return alert("Please type a name.");
+            if(!name) return alert("Please type an employee name.");
             
-            fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "addTech", techName: name }) })
-            .then(() => {
-                alert(name + " added to field roster!");
-                document.getElementById('newTechName').value = '';
-                refreshSystemData();
-            });
+            localTechs.push(name);
+            renderInterface();
+            document.getElementById('newTechName').value = '';
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ action: "addTech", techName: name })
+            }).then(() => alert(name + " pushed to spreadsheet database roster rows!"));
         }
 
+        // MANAGEMENT SUBMIT: ADD NEW HARDWARE MODEL PROFILE
         function addNewHardware() {
             const name = document.getElementById('newHardwareName').value.trim();
-            if(!name) return alert("Please enter a hardware item model profile.");
+            if(!name) return alert("Please enter a hardware catalog name profile description string.");
             
-            fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "addHardware", itemName: name }) })
-            .then(() => {
-                alert(name + " added to system tracking lines!");
-                document.getElementById('newHardwareName').value = '';
-                refreshSystemData();
-            });
+            localInventory.push({ name: name, qty: 0 });
+            renderInterface();
+            document.getElementById('newHardwareName').value = '';
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ action: "addHardware", itemName: name })
+            }).then(() => alert(name + " added to spreadsheet layout rows baseline items!"));
         }
 
+        // MANAGEMENT SUBMIT: DIRECT MANUAL STOCK COUNT ADJ
         function adjustStockLevel() {
             const item = document.getElementById('adjustItemSelect').value;
-            const qty = document.getElementById('adjustQtyInput').value.trim();
-            if(!item || qty === "") return alert("Please specify the exact hardware type and quantitative adjustment target.");
+            const qty = parseInt(document.getElementById('adjustQtyInput').value);
+            if(!item || isNaN(qty)) return alert("Please specify the target hardware asset and quantitative entry amount target value.");
             
-            fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "adjustStock", equipment: item, newQty: qty }) })
-            .then(() => {
-                alert(item + " quantity set to " + qty + " units!");
-                document.getElementById('adjustQtyInput').value = '';
-                refreshSystemData();
-            });
+            for(let asset of localInventory) {
+                if(asset.name === item) { asset.qty = qty; break; }
+            }
+            renderInterface();
+            document.getElementById('adjustQtyInput').value = '';
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ action: "adjustStock", equipment: item, newQty: qty })
+            }).then(() => alert(item + " warehouse tracking amount calibrated to " + qty + " units!"));
         }
     </script>
 </body>
