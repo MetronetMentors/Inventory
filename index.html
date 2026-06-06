@@ -115,7 +115,6 @@
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJ4fUi_K1J-MckIzjgi8-3bTcd3in6Ab0nccNzWfNHKaV-rwXc99RhSE1UcUsTDZpsiw/exec"; 
         
-        // Local arrays to manage layout if background GET checks fall back
         let localTechs = [];
         let localInventory = [];
         let localLogs = [];
@@ -137,7 +136,6 @@
             }
         }
 
-        // UNIFIED RENDER ENGINE: Builds dropdown layouts out dynamically
         function renderInterface() {
             let techSelect = document.getElementById('techSelect');
             techSelect.innerHTML = '<option value="">-- Choose Tech --</option>';
@@ -155,7 +153,7 @@
 
             let invTable = document.getElementById('inventoryTableBody');
             invTable.innerHTML = '';
-            if(localInventory.length === 0) invTable.innerHTML = '<tr><td colspan="2">No active hardware tracking balances. Use Management Panel to initialize hardware values.</td></tr>';
+            if(localInventory.length === 0) invTable.innerHTML = '<tr><td colspan="2">No active hardware tracking balances.</td></tr>';
             localInventory.forEach(item => {
                 invTable.innerHTML += `<tr><td>${item.name}</td><td><strong>${item.qty}</strong></td></tr>`;
             });
@@ -168,33 +166,39 @@
             });
         }
 
-        // SUBMIT EQUIPMENT DISBURSEMENT
+        // --- NEW BULLETPROOF DATA TRANSMISSION ENGINE ---
+        function sendToGoogle(payloadObj) {
+            const params = new URLSearchParams();
+            for (let key in payloadObj) {
+                params.append(key, payloadObj[key]);
+            }
+            return fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: params
+            });
+        }
+
         document.getElementById('issueForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const tName = document.getElementById('techSelect').value;
             const eName = document.getElementById('equipSelect').value;
             const rNote = document.getElementById('reasonInput').value;
 
-            // 1. Instantly update interface locally for field latency control
             for(let item of localInventory) {
                 if(item.name === eName) { item.qty = Math.max(0, item.qty - 1); break; }
             }
             localLogs.push({ date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), tech: tName, item: eName, reason: rNote });
             renderInterface();
 
-            // 2. Transmit safely to backend pipeline sheet
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ action: "issueEquipment", techName: tName, equipment: eName, reason: rNote })
-            }).then(() => {
+            sendToGoogle({ action: "issueEquipment", techName: tName, equipment: eName, reason: rNote })
+            .then(() => {
                 alert("Equipment logged successfully! Count updated.");
                 document.getElementById('reasonInput').value = '';
                 switchTab('inventoryTab');
             });
         });
 
-        // MANAGEMENT SUBMIT: ADD NEW FIELD TECH
         function addNewTech() {
             const name = document.getElementById('newTechName').value.trim();
             if(!name) return alert("Please type an employee name.");
@@ -203,34 +207,26 @@
             renderInterface();
             document.getElementById('newTechName').value = '';
 
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ action: "addTech", techName: name })
-            }).then(() => alert(name + " pushed to spreadsheet database roster rows!"));
+            sendToGoogle({ action: "addTech", techName: name })
+            .then(() => alert(name + " pushed to spreadsheet rows!"));
         }
 
-        // MANAGEMENT SUBMIT: ADD NEW HARDWARE MODEL PROFILE
         function addNewHardware() {
             const name = document.getElementById('newHardwareName').value.trim();
-            if(!name) return alert("Please enter a hardware catalog name profile description string.");
+            if(!name) return alert("Please enter a hardware catalog name.");
             
             localInventory.push({ name: name, qty: 0 });
             renderInterface();
             document.getElementById('newHardwareName').value = '';
 
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ action: "addHardware", itemName: name })
-            }).then(() => alert(name + " added to spreadsheet layout rows baseline items!"));
+            sendToGoogle({ action: "addHardware", itemName: name })
+            .then(() => alert(name + " added to tracking baseline!"));
         }
 
-        // MANAGEMENT SUBMIT: DIRECT MANUAL STOCK COUNT ADJ
         function adjustStockLevel() {
             const item = document.getElementById('adjustItemSelect').value;
             const qty = parseInt(document.getElementById('adjustQtyInput').value);
-            if(!item || isNaN(qty)) return alert("Please specify the target hardware asset and quantitative entry amount target value.");
+            if(!item || isNaN(qty)) return alert("Please specify the target asset and amount.");
             
             for(let asset of localInventory) {
                 if(asset.name === item) { asset.qty = qty; break; }
@@ -238,12 +234,6 @@
             renderInterface();
             document.getElementById('adjustQtyInput').value = '';
 
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ action: "adjustStock", equipment: item, newQty: qty })
-            }).then(() => alert(item + " warehouse tracking amount calibrated to " + qty + " units!"));
+            sendToGoogle({ action: "adjustStock", equipment: item, newQty: qty })
+            .then(() => alert(item + " amount calibrated to " + qty + " units!"));
         }
-    </script>
-</body>
-</html>
