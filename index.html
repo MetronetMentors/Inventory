@@ -5,120 +5,159 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metronet Field Inventory System</title>
     <style>
-        :root { --primary: #00a859; --dark: #232323; --light: #f4f4f4; --border: #cccccc; }
+        /* PHASE 1: MODERN DARK MODE COLOR PALETTE */
+        :root { 
+            --primary: #00df73; /* Brightened green for dark mode pop */
+            --primary-hover: #00fa82;
+            --bg-base: #121212; 
+            --bg-surface: #1e1e1e; 
+            --bg-elevated: #2a2a2a;
+            --text-main: #e0e0e0;
+            --text-muted: #999999;
+            --border: #333333; 
+        }
+        
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        body { background-color: var(--light); color: var(--dark); padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; }
-        h1, h2, h3 { margin-bottom: 20px; color: var(--dark); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
+        body { background-color: var(--bg-base); color: var(--text-main); padding: 20px; line-height: 1.5; }
+        
+        /* Modern App Card Container */
+        .container { max-width: 900px; margin: 0 auto; background: var(--bg-surface); padding: 35px; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); border: 1px solid var(--border); position: relative; }
+        h1, h2, h3 { margin-bottom: 20px; color: #ffffff; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-weight: 600; }
         
         /* Stealth Admin Button */
-        .admin-trigger { position: absolute; top: 30px; right: 30px; background: none; border: 1px solid #eee; font-size: 18px; cursor: pointer; padding: 5px 10px; border-radius: 4px; color: #888; width: auto; margin: 0; transition: 0.2s; }
-        .admin-trigger:hover { background: #f9f9f9; color: var(--dark); border-color: #ccc; }
+        .admin-trigger { position: absolute; top: 30px; right: 30px; background: none; border: none; font-size: 20px; cursor: pointer; padding: 8px; border-radius: 8px; color: var(--text-muted); width: auto; margin: 0; transition: 0.2s; opacity: 0.5; }
+        .admin-trigger:hover { background: var(--bg-elevated); color: var(--primary); opacity: 1; }
 
-        #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background:var(--dark); display:flex; justify-content:center; align-items:center; z-index:999; }
-        .login-box { background: white; padding: 40px; border-radius: 8px; text-align: center; max-width: 400px; width: 90%; }
-        .tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid var(--border); overflow-x: auto; }
-        .tab-btn { padding: 12px 24px; border: none; background: none; font-size: 16px; font-weight: bold; cursor: pointer; color: #666; white-space: nowrap; }
-        .tab-btn.active { color: var(--primary); border-bottom: 4px solid var(--primary); }
-        .tab-content { display: none; }
+        /* Cinematic Login Screen */
+        #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(18, 18, 18, 0.95); backdrop-filter: blur(8px); display:flex; justify-content:center; align-items:center; z-index:999; }
+        .login-box { background: var(--bg-surface); padding: 40px; border-radius: 12px; border: 1px solid var(--border); text-align: center; max-width: 400px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .login-box p { color: var(--text-muted); }
+        
+        /* Sleek Navigation Tabs */
+        .tabs { display: flex; margin-bottom: 30px; border-bottom: 2px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+        .tab-btn { padding: 14px 24px; border: none; background: none; font-size: 16px; font-weight: 600; cursor: pointer; color: var(--text-muted); white-space: nowrap; transition: 0.2s; }
+        .tab-btn:hover { color: var(--text-main); }
+        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .tab-content.active { display: block; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; margin-bottom: 10px; }
-        button { background-color: var(--primary); color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 5px; }
-        button:hover { opacity: 0.9; }
-        button:disabled { background-color: #888; cursor: not-allowed; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; margin-bottom: 20px; }
-        th, td { border: 1px solid var(--border); padding: 12px; text-align: left; }
-        th { background-color: #eee; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Chunky Mobile-Friendly Forms */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select, textarea { width: 100%; padding: 14px; background: var(--bg-base); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; font-size: 16px; transition: all 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 223, 115, 0.15); }
+        
+        /* High-Visibility Buttons */
+        button { background-color: var(--primary); color: #000000; border: none; padding: 16px 20px; font-size: 16px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; transition: 0.2s; letter-spacing: 0.5px; }
+        button:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 223, 115, 0.3); }
+        button:active { transform: translateY(0); }
+        button:disabled { background-color: #444; color: #888; cursor: not-allowed; box-shadow: none; transform: none; }
+        
+        /* Clean Data Tables */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; background: var(--bg-surface); margin-bottom: 20px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background-color: var(--bg-elevated); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: rgba(255,255,255,0.02); }
+        
+        /* Management Grid */
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } .admin-trigger { top: 25px; right: 15px; } }
-        .admin-card { border: 1px solid var(--border); padding: 15px; border-radius: 6px; background: #fafafa; margin-bottom: 15px; }
-        .search-bar { width: 100%; padding: 14px; border: 2px solid var(--primary); border-radius: 6px; font-size: 16px; margin-bottom: 15px; background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2300a859" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 12px center; padding-left: 40px; transition: box-shadow 0.2s; }
-        .search-bar:focus { outline: none; box-shadow: 0 0 8px rgba(0, 168, 89, 0.3); }
+        @media (max-width: 768px) { .admin-grid { grid-template-columns: 1fr; } .container { padding: 20px; } }
+        .admin-card { border: 1px solid var(--border); padding: 20px; border-radius: 10px; background: var(--bg-elevated); margin-bottom: 15px; }
+        .admin-card h3 { border-bottom: none; margin-bottom: 15px; padding-bottom: 0; }
+        
+        /* Stylized Search Bar */
+        .search-bar { width: 100%; padding: 14px 14px 14px 44px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; margin-bottom: 20px; background: var(--bg-base) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23999999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 14px center; transition: all 0.2s; color: var(--text-main); }
+        .search-bar:focus { border-color: var(--primary); background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%2300df73" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>'); }
     </style>
 </head>
 <body>
 
     <div id="loginOverlay">
         <div class="login-box">
-            <h2>Mentor & Supervisor Portal</h2>
-            <p style="margin-bottom: 20px; color: #666;">Enter the system password to manage hardware stock.</p>
-            <input type="password" id="sysPassword" placeholder="Enter System Password">
+            <h2 style="border:none; margin-bottom:10px;">Supervisor Portal</h2>
+            <p style="margin-bottom: 25px;">Enter system password to securely sync data.</p>
+            <input type="password" id="sysPassword" placeholder="Enter Password">
             <button onclick="attemptLogin()">Unlock System</button>
-            <p id="loginError" style="color:red; margin-top:10px; display:none;">Invalid System Password</p>
+            <p id="loginError" style="color:#ff5252; margin-top:15px; display:none; font-weight:600;">Invalid Authorization</p>
         </div>
     </div>
 
     <div class="container">
-        <button class="admin-trigger" onclick="requireAdminPassword()" title="Supervisor Login">⚙️</button>
+        <button class="admin-trigger" onclick="requireAdminPassword()" title="Admin Lock">⚙️</button>
         
-        <h1>Field Gear Allocation System</h1>
+        <h1 style="border:none; margin-bottom:5px;">Field Gear Allocation</h1>
+        <p style="color: var(--text-muted); margin-bottom: 25px;">Metronet Live Inventory Tracking</p>
         
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('issueTab')">Issue Equipment</button>
             <button class="tab-btn" onclick="switchTab('inventoryTab')">Live Stock Count</button>
             <button class="tab-btn" onclick="switchTab('logsTab')">Audit Trail</button>
-            </div>
+        </div>
 
         <div id="issueTab" class="tab-content active">
-            <h2>Log Gear Disbursement</h2>
             <form id="issueForm">
                 <div class="form-group">
                     <label for="techSelect">Select Field Technician</label>
-                    <select id="techSelect" required><option value="">Loading...</option></select>
+                    <select id="techSelect" required><option value="">Loading roster...</option></select>
                 </div>
                 <div class="form-group">
                     <label for="equipSelect">Equipment Needed</label>
-                    <select id="equipSelect" required><option value="">Loading...</option></select>
+                    <select id="equipSelect" required><option value="">Loading hardware...</option></select>
                 </div>
                 <div class="form-group">
-                    <label for="reasonInput">Reason / What happened to old unit?</label>
-                    <textarea id="reasonInput" rows="3" required></textarea>
+                    <label for="reasonInput">Reason / Disbursement Notes</label>
+                    <textarea id="reasonInput" rows="3" placeholder="What happened to the old unit?" required></textarea>
                 </div>
                 <button type="submit">Complete Log & Deduct Stock</button>
             </form>
         </div>
 
         <div id="inventoryTab" class="tab-content">
-            <h2>Warehouse Stock Baseline</h2>
-            <table>
-                <thead><tr><th>Equipment Hardware Item</th><th>Available In Stock</th></tr></thead>
+            <table style="margin-top:0;">
+                <thead><tr><th>Hardware Type</th><th>Available Units</th></tr></thead>
                 <tbody id="inventoryTableBody"><tr><td colspan="2">No hardware items found.</td></tr></tbody>
             </table>
         </div>
 
         <div id="logsTab" class="tab-content">
-            <h2>Equipment Log Audit Trail</h2>
-            <input type="text" id="logSearchInput" class="search-bar" placeholder="Search by Tech Name, Date, or Equipment Item..." oninput="renderLogsTable()">
-            <table>
-                <thead><tr><th>Date</th><th>Tech Name</th><th>Item Given</th><th>Notes</th></tr></thead>
+            <input type="text" id="logSearchInput" class="search-bar" placeholder="Filter by Tech, Date, or Item..." oninput="renderLogsTable()">
+            <table style="margin-top:0;">
+                <thead><tr><th>Date / Time</th><th>Tech Name</th><th>Item Given</th><th>Notes</th></tr></thead>
                 <tbody id="logsTableBody"><tr><td colspan="4">Loading records...</td></tr></tbody>
             </table>
         </div>
 
         <div id="adminTab" class="tab-content">
-            <h2>System Roster & Catalog Management</h2>
+            <h2 style="margin-bottom: 20px;">Catalog Management</h2>
             <div class="admin-grid">
                 <div class="admin-card">
-                    <h3>Add New Tech to Roster</h3>
+                    <h3>Add New Tech</h3>
                     <input type="text" id="newTechName" placeholder="Full Employee Name">
-                    <button onclick="addNewTech()">Add New Hire</button>
+                    <button onclick="addNewTech()">Add to Roster</button>
                 </div>
                 <div class="admin-card">
-                    <h3>Add New Hardware Type</h3>
-                    <input type="text" id="newHardwareName" placeholder="Hardware Model (e.g. Ruckus R550)">
-                    <button onclick="addNewHardware()">Add Hardware Type</button>
+                    <h3>Add Hardware</h3>
+                    <input type="text" id="newHardwareName" placeholder="Model (e.g. Ruckus R550)">
+                    <button onclick="addNewHardware()">Add to Catalog</button>
                 </div>
             </div>
             
             <div class="admin-card" style="margin-top: 20px;">
-                <h3>Adjust Stock Levels Manually</h3>
-                <label>Select Item</label>
-                <select id="adjustItemSelect"><option value="">No hardware types found...</option></select>
-                <label>New Stock Quantity</label>
-                <input type="number" id="adjustQtyInput" placeholder="Enter absolute amount (e.g. 15)">
-                <button onclick="adjustStockLevel()" style="background-color: #333;">Update Stock Level</button>
+                <h3>Manual Stock Override</h3>
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:15px; margin-bottom:15px;">
+                    <div>
+                        <label>Select Item</label>
+                        <select id="adjustItemSelect" style="margin-bottom:0;"><option value="">Loading...</option></select>
+                    </div>
+                    <div>
+                        <label>Exact Count</label>
+                        <input type="number" id="adjustQtyInput" placeholder="Qty" style="margin-bottom:0;">
+                    </div>
+                </div>
+                <button onclick="adjustStockLevel()" style="background-color: var(--bg-surface); color: var(--primary); border: 2px solid var(--primary);">Force Override Level</button>
             </div>
         </div>
     </div>
@@ -135,17 +174,14 @@
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             
-            // If we are switching to a normal tab via a button, highlight the button
             if(window.event && window.event.currentTarget && window.event.currentTarget.classList.contains('tab-btn')) {
                 window.event.currentTarget.classList.add('active');
             }
         }
 
-        // --- THE SECRET SUPERVISOR LOCK ---
         function requireAdminPassword() {
             const pass = prompt("Enter Supervisor Admin Password:");
-            if (pass === "GunBros") { // <-- You can change your internal password right here!
-                // Unselect all normal tab buttons and reveal the hidden div
+            if (pass === "Super2026") {
                 document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
                 switchTab('adminTab');
             } else if (pass !== null) {
@@ -157,7 +193,7 @@
             const passInput = document.getElementById('sysPassword').value;
             if (passInput === "Metro2020") {
                 const loginBtn = document.querySelector('.login-box button');
-                loginBtn.innerText = "Syncing with Google Sheets...";
+                loginBtn.innerText = "Syncing Database...";
                 loginBtn.disabled = true;
 
                 fetch(WEB_APP_URL + "?action=getData")
@@ -182,13 +218,13 @@
 
         function renderInterface() {
             let techSelect = document.getElementById('techSelect');
-            techSelect.innerHTML = '<option value="">-- Choose Tech --</option>';
+            techSelect.innerHTML = '<option value="" disabled selected>-- Select Name --</option>';
             localTechs.forEach(t => techSelect.innerHTML += `<option value="${t}">${t}</option>`);
 
             let equipSelect = document.getElementById('equipSelect');
             let adjustSelect = document.getElementById('adjustItemSelect');
-            equipSelect.innerHTML = '<option value="">-- Choose Hardware Item --</option>';
-            adjustSelect.innerHTML = '<option value="">-- Choose Hardware Item --</option>';
+            equipSelect.innerHTML = '<option value="" disabled selected>-- Select Hardware --</option>';
+            adjustSelect.innerHTML = '<option value="" disabled selected>-- Select Item --</option>';
             localInventory.forEach(item => {
                 let optionHtml = `<option value="${item.name}">${item.name}</option>`;
                 equipSelect.innerHTML += optionHtml;
@@ -197,9 +233,9 @@
 
             let invTable = document.getElementById('inventoryTableBody');
             invTable.innerHTML = '';
-            if(localInventory.length === 0) invTable.innerHTML = '<tr><td colspan="2">No active hardware tracking balances.</td></tr>';
+            if(localInventory.length === 0) invTable.innerHTML = '<tr><td colspan="2" style="text-align:center; color:var(--text-muted);">No active hardware tracking balances.</td></tr>';
             localInventory.forEach(item => {
-                invTable.innerHTML += `<tr><td>${item.name}</td><td><strong>${item.qty}</strong></td></tr>`;
+                invTable.innerHTML += `<tr><td>${item.name}</td><td><strong style="color:var(--text-main); font-size:16px;">${item.qty}</strong></td></tr>`;
             });
 
             renderLogsTable();
@@ -213,7 +249,6 @@
             let searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
 
             let filteredLogs = localLogs.slice().reverse().filter(log => {
-                // --- INVISIBILITY CLOAK: Hide "SYSTEM" adjustments from the website ---
                 if (log.tech === "SYSTEM") return false; 
                 
                 return (log.date && log.date.toString().toLowerCase().includes(searchTerm)) || 
@@ -223,12 +258,12 @@
             });
 
             if(filteredLogs.length === 0) {
-                logTable.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#666;">No matching records found.</td></tr>';
+                logTable.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:30px;">No matching records found.</td></tr>';
                 return;
             }
 
             filteredLogs.forEach(log => {
-                logTable.innerHTML += `<tr><td>${log.date}</td><td><strong>${log.tech}</strong></td><td>${log.item}</td><td>${log.reason}</td></tr>`;
+                logTable.innerHTML += `<tr><td style="color:var(--text-muted); font-size:13px;">${log.date}</td><td><strong style="color:var(--primary);">${log.tech}</strong></td><td>${log.item}</td><td style="color:var(--text-muted);">${log.reason}</td></tr>`;
             });
         }
 
@@ -293,7 +328,6 @@
             for(let asset of localInventory) {
                 if(asset.name === item) { asset.qty = qty; break; }
             }
-            // Add a temporary local dummy log so it mirrors the backend logic without a hard refresh
             localLogs.push({ date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(), tech: "SYSTEM", item: item, reason: "Manual adjustment to: " + qty });
             
             renderInterface();
