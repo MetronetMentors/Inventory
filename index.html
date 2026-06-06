@@ -86,7 +86,7 @@
     <div id="loginOverlay">
         <div class="login-box">
             <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-login">
-            <h2 style="border:none; margin-bottom:10px;">Supervisor Portal</h2>
+            <h2 style="border:none; margin-bottom:10px;">Inventory Portal</h2>
             <p style="margin-bottom: 25px;">Enter system password to securely sync data.</p>
             <input type="password" id="sysPassword" placeholder="Enter Password">
             <button onclick="attemptLogin()">Unlock System</button>
@@ -100,15 +100,15 @@
         <div class="header-wrap">
             <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-dash">
             <div>
-                <h1 style="border:none; margin-bottom:5px; padding-bottom:0;">Field Gear Allocation</h1>
+                <h1 style="border:none; margin-bottom:5px; padding-bottom:0;">Gear Allocation</h1>
                 <p style="color: var(--accent); margin-bottom: 0; font-weight: 500;">Live Inventory Tracking Engine</p>
             </div>
         </div>
         
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('issueTab')">Issue Equipment</button>
+            <button class="tab-btn active" onclick="switchTab('issueTab')">Allocate Equipment</button>
             <button class="tab-btn" onclick="switchTab('inventoryTab')">Live Stock Count</button>
-            <button class="tab-btn" onclick="switchTab('logsTab')">Audit Trail</button>
+            <button class="tab-btn" onclick="switchTab('logsTab')">Equipment Log</button>
         </div>
 
         <div id="issueTab" class="tab-content active">
