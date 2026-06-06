@@ -113,7 +113,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJ4fUi_K1J-MckIzjgi8-3bTcd3in6Ab0nccNzWfNHKaV-rwXc99RhSE1UcUsTDZpsiw/exec"; 
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyJ4fUi_K1J-MckIzjgi8-3bTcd3in6Ab0nccNzWfNHKaV-rwXc99RhSElUcUsTDZpsiw/exec"; 
         
         let localTechs = [];
         let localInventory = [];
@@ -165,17 +165,18 @@
                 logTable.innerHTML += `<tr><td>${log.date}</td><td>${log.tech}</td><td>${log.item}</td><td>${log.reason}</td></tr>`;
             });
         }
-
         // --- NEW BULLETPROOF DATA TRANSMISSION ENGINE ---
         function sendToGoogle(payloadObj) {
             const params = new URLSearchParams();
             for (let key in payloadObj) {
                 params.append(key, payloadObj[key]);
             }
-            return fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: params
+            // Attach the data directly to the URL to bypass POST blocking
+            const requestUrl = WEB_APP_URL + "?" + params.toString();
+            
+            return fetch(requestUrl, {
+                method: 'GET',
+                mode: 'no-cors'
             });
         }
 
