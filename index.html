@@ -72,25 +72,11 @@
         .search-bar { width: 100%; padding: 14px 14px 14px 44px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; margin-bottom: 20px; background: var(--bg-base) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23999999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 14px center; transition: all 0.2s; color: var(--text-main); }
         .search-bar:focus { border-color: var(--primary); background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%237E3FF2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>'); }
 
-        /* --- NEW: FLOATING IMAGE PREVIEW BOX --- */
         #imgPreviewBox {
-            position: fixed;
-            display: none;
-            z-index: 1000;
-            background: var(--bg-surface);
-            border: 2px solid var(--primary);
-            border-radius: 8px;
-            padding: 8px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-            pointer-events: none; /* Prevents the box from blocking your mouse */
-            width: 220px;
+            position: fixed; display: none; z-index: 1000; background: var(--bg-surface); border: 2px solid var(--primary);
+            border-radius: 8px; padding: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.8); pointer-events: none; width: 220px;
         }
-        #imgPreviewBox img {
-            width: 100%;
-            border-radius: 4px;
-            display: block;
-            object-fit: contain;
-        }
+        #imgPreviewBox img { width: 100%; border-radius: 4px; display: block; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -144,6 +130,7 @@
         </div>
 
         <div id="inventoryTab" class="tab-content">
+            <input type="text" id="inventorySearchInput" class="search-bar" placeholder="Search Hardware Catalog..." oninput="renderInventoryTable()">
             <table style="margin-top:0;">
                 <thead><tr><th>Hardware Type</th><th>Available Units</th></tr></thead>
                 <tbody id="inventoryTableBody"><tr><td colspan="2">No hardware items found.</td></tr></tbody>
@@ -197,25 +184,21 @@
         let localInventory = [];
         let localLogs = [];
 
-        // --- NEW IMAGE HOVER LOGIC ---
         const previewBox = document.getElementById('imgPreviewBox');
         const previewImg = document.getElementById('previewImgEl');
 
         function triggerPreview(e, itemName) {
             const item = localInventory.find(i => i.name === itemName);
-            if (!item || !item.img) return; // Ignore if item has no image link
+            if (!item || !item.img) return; 
 
-            // Mobile tap uses 'touches', desktop mouse uses 'clientX'
             const ev = e.touches ? e.touches[0] : e;
             
             previewImg.src = item.img;
             previewBox.style.display = 'block';
             
-            // Calculate hover box position slightly offset from cursor
             let x = ev.clientX + 15;
             let y = ev.clientY + 15;
             
-            // Keep box on screen if it gets too close to the right/bottom edge
             if (x + 240 > window.innerWidth) x = ev.clientX - 240;
             if (y + 240 > window.innerHeight) y = ev.clientY - 240;
             
@@ -228,11 +211,9 @@
             previewImg.src = '';
         }
 
-        // Tap anywhere else on phone to close picture
         document.addEventListener('touchstart', function(e) {
             if (!e.target.closest('tr')) hidePreview();
         });
-
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -295,20 +276,37 @@
                 adjustSelect.innerHTML += optionHtml;
             });
 
+            // Call the new dedicated inventory render function
+            renderInventoryTable();
+            renderLogsTable();
+        }
+
+        // --- NEW INVENTORY RENDER ENGINE WITH SEARCH ---
+        function renderInventoryTable() {
             let invTable = document.getElementById('inventoryTableBody');
             invTable.innerHTML = '';
-            if(localInventory.length === 0) invTable.innerHTML = '<tr><td colspan="2" style="text-align:center; color:var(--text-muted);">No active hardware tracking balances.</td></tr>';
             
-            // Notice we injected the mouse hover and touch tags into the table rows here!
-            localInventory.forEach(item => {
+            let searchInput = document.getElementById('inventorySearchInput');
+            let searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+
+            // Filter the inventory list
+            let filteredInventory = localInventory.filter(item => {
+                return item.name && item.name.toLowerCase().includes(searchTerm);
+            });
+
+            if(filteredInventory.length === 0) {
+                invTable.innerHTML = '<tr><td colspan="2" style="text-align:center; color:var(--text-muted); padding:30px;">No matching hardware found.</td></tr>';
+                return;
+            }
+
+            // Build the table rows, keeping the image hover intact
+            filteredInventory.forEach(item => {
                 let safeName = item.name.replace(/'/g, "\\'");
                 invTable.innerHTML += `<tr onmousemove="triggerPreview(event, '${safeName}')" onmouseleave="hidePreview()" ontouchstart="triggerPreview(event, '${safeName}')">
                     <td>${item.name}</td>
                     <td><strong style="color:var(--accent); font-size:16px;">${item.qty}</strong></td>
                 </tr>`;
             });
-
-            renderLogsTable();
         }
 
         function renderLogsTable() {
@@ -330,7 +328,6 @@
                 return;
             }
 
-            // Notice we injected the mouse hover and touch tags here too!
             filteredLogs.forEach(log => {
                 let safeName = log.item.replace(/'/g, "\\'");
                 logTable.innerHTML += `<tr onmousemove="triggerPreview(event, '${safeName}')" onmouseleave="hidePreview()" ontouchstart="triggerPreview(event, '${safeName}')">
@@ -361,6 +358,8 @@
                 if(item.name === eName) { item.qty = Math.max(0, item.qty - 1); break; }
             }
             localLogs.push({ date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), tech: tName, item: eName, reason: rNote });
+            
+            // Re-render both tables
             renderInterface();
 
             sendToGoogle({ action: "issueEquipment", techName: tName, equipment: eName, reason: rNote })
