@@ -20,7 +20,9 @@
         }
         
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-        body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.5; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* --- BUG FIX 1: Added 100dvh fallback for mobile browsers --- */
+        body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.5; display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
         
         /* LOGO GLOW EFFECT */
         .brand-logo-nav { background: transparent; width: 100%; object-fit: contain; margin-bottom: 30px; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2)); }
@@ -79,13 +81,15 @@
 
         /* MOBILE MENU TOGGLE */
         .menu-toggle { display: none; background: none; border: none; color: var(--text-main); font-size: 24px; cursor: pointer; }
+        
         @media (max-width: 900px) {
             .sidebar { position: fixed; height: 100%; left: -280px; }
             .sidebar.open { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
             .menu-toggle { display: block; }
             .admin-grid { grid-template-columns: 1fr; }
             .top-header { padding: 15px 20px; }
-            .content-container { padding: 20px; }
+            /* --- BUG FIX 2: Added 80px bottom cushion so the last button isn't cut off --- */
+            .content-container { padding: 20px 20px 80px 20px; }
         }
 
         /* FLOATING IMAGE OVERLAY */
@@ -130,7 +134,7 @@
                     <p>Live Inventory Tracking Engine</p>
                 </div>
             </div>
-            </header>
+        </header>
 
         <div id="lowStockAlert" class="alert-banner">
             <span style="font-size:20px;">⚠️</span>
@@ -234,7 +238,6 @@
         let localInventory = [];
         let localLogs = [];
 
-        // Mobile Sidebar Toggle
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
         }
@@ -278,13 +281,21 @@
             if(window.event && window.event.currentTarget && window.event.currentTarget.classList.contains('nav-btn')) {
                 window.event.currentTarget.classList.add('active');
             }
-            // Auto-close sidebar on mobile after click
             document.getElementById('sidebar').classList.remove('open');
+
+            let alertBox = document.getElementById('lowStockAlert');
+            let lowStockItems = localInventory.filter(item => item.qty <= 1);
+            
+            if (tabId === 'adminTab' || lowStockItems.length === 0) {
+                alertBox.style.display = 'none';
+            } else {
+                alertBox.style.display = 'flex';
+            }
         }
 
         function requireAdminPassword() {
             const pass = prompt("Enter Supervisor Admin Password:");
-            if (pass === "GunBros") {
+            if (pass === "Super2026") {
                 switchTab('adminTab');
             } else if (pass !== null) {
                 alert("Incorrect authorization.");
@@ -340,15 +351,15 @@
                 adjustSelect.innerHTML += optionHtml;
             });
 
-            // --- ALERT ENGINE CALCULATION ---
             let lowStockItems = localInventory.filter(item => item.qty <= 1);
             let alertBox = document.getElementById('lowStockAlert');
             let alertText = document.getElementById('lowStockItemsText');
+            let isAdminActive = document.getElementById('adminTab').classList.contains('active');
             
             if(lowStockItems.length > 0) {
                 let names = lowStockItems.map(i => `${i.name} (${i.qty} left)`).join(' • ');
                 alertText.innerText = names;
-                alertBox.style.display = 'flex';
+                alertBox.style.display = isAdminActive ? 'none' : 'flex';
             } else {
                 alertBox.style.display = 'none';
             }
@@ -449,18 +460,15 @@
             sendToGoogle({ action: "addTech", techName: name }).then(() => alert(name + " added to roster."));
         }
 
-        // --- NEW: REMOVE FORMER TECH LOGIC ---
         function removeTech() {
             const name = document.getElementById('removeTechSelect').value;
             if(!name) return alert("Please select a tech to remove.");
             
             if(!confirm("WARNING: Are you sure you want to permanently remove " + name + " from the active roster?")) return;
 
-            // Remove from the local array immediately so the dropdowns update
             localTechs = localTechs.filter(t => t !== name);
             renderInterface();
             
-            // Tell Google Sheets to delete the row
             sendToGoogle({ action: "removeTech", techName: name })
             .then(() => alert(name + " successfully removed from the active roster."));
         }
