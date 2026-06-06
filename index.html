@@ -22,9 +22,13 @@
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
         body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.5; display: flex; height: 100vh; overflow: hidden; }
         
+        /* LOGO GLOW EFFECT */
+        .brand-logo-nav { background: transparent; width: 100%; object-fit: contain; margin-bottom: 30px; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2)); }
+        .brand-logo-dash { background: transparent; width: 180px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.15)); }
+        .brand-logo-login { background: transparent; width: 80%; max-width: 220px; margin-bottom: 25px; filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.25)); }
+
         /* SLEEK SIDEBAR NAVIGATION */
         .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 25px 20px; transition: transform 0.3s ease; z-index: 100; }
-        .brand-logo-nav { background: transparent; width: 100%; object-fit: contain; margin-bottom: 30px; }
         .nav-btn { background: transparent; border: none; color: var(--text-muted); text-align: left; padding: 14px 20px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
         .nav-btn:hover { background: rgba(126, 63, 242, 0.1); color: var(--text-main); }
         .nav-btn.active { background: var(--primary); color: #fff; box-shadow: 0 4px 15px rgba(126, 63, 242, 0.4); }
@@ -72,7 +76,6 @@
         
         #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: linear-gradient(rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.95)), url('https://dm12lgf5m7bd0.cloudfront.net/page/grid/metronet-blog-state-colorado.webp') no-repeat center center; background-size: cover; display:flex; justify-content:center; align-items:center; z-index:999; backdrop-filter: blur(8px); }
         .login-box { background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(15px); padding: 50px 40px; border-radius: 16px; border: 1px solid var(--border); text-align: center; max-width: 420px; width: 90%; box-shadow: 0 25px 60px rgba(0,0,0,0.9); }
-        .brand-logo-login { background: transparent; width: 80%; max-width: 220px; margin-bottom: 25px; }
 
         /* MOBILE MENU TOGGLE */
         .menu-toggle { display: none; background: none; border: none; color: var(--text-main); font-size: 24px; cursor: pointer; }
@@ -178,13 +181,22 @@
 
             <div id="adminTab" class="tab-content">
                 <div class="admin-grid">
+                    
                     <div class="app-card">
-                        <h2>Team Roster</h2>
+                        <h2>Team Roster Management</h2>
                         <div class="form-group">
-                            <label>Full Employee Name</label>
+                            <label>Add New Employee</label>
                             <input type="text" id="newTechName" placeholder="e.g. Jane Doe">
                         </div>
                         <button class="action-btn" onclick="addNewTech()">Add to Roster</button>
+
+                        <hr style="border: 0; border-top: 1px solid var(--border); margin: 25px 0;">
+
+                        <div class="form-group">
+                            <label>Remove Former Employee</label>
+                            <select id="removeTechSelect"><option value="">Loading roster...</option></select>
+                        </div>
+                        <button class="action-btn" onclick="removeTech()" style="background-color: transparent; border: 2px solid var(--alert); color: var(--alert);">Remove from Roster</button>
                     </div>
                     
                     <div class="app-card">
@@ -308,8 +320,15 @@
 
         function renderInterface() {
             let techSelect = document.getElementById('techSelect');
+            let removeTechSelect = document.getElementById('removeTechSelect');
             techSelect.innerHTML = '<option value="" disabled selected>-- Select Name --</option>';
-            localTechs.forEach(t => techSelect.innerHTML += `<option value="${t}">${t}</option>`);
+            if(removeTechSelect) removeTechSelect.innerHTML = '<option value="" disabled selected>-- Select Name --</option>';
+            
+            localTechs.forEach(t => {
+                let optionHTML = `<option value="${t}">${t}</option>`;
+                techSelect.innerHTML += optionHTML;
+                if(removeTechSelect) removeTechSelect.innerHTML += optionHTML;
+            });
 
             let equipSelect = document.getElementById('equipSelect');
             let adjustSelect = document.getElementById('adjustItemSelect');
@@ -354,7 +373,6 @@
 
             filteredInventory.forEach(item => {
                 let safeName = item.name.replace(/'/g, "\\'");
-                // Highlighting critical stock in the table
                 let qtyColor = item.qty <= 1 ? 'var(--alert)' : 'var(--accent)';
                 invTable.innerHTML += `<tr onmousemove="triggerPreview(event, '${safeName}')" onmouseleave="hidePreview()" ontouchstart="triggerPreview(event, '${safeName}')">
                     <td style="font-weight:500;">${item.name}</td>
@@ -429,6 +447,22 @@
             renderInterface();
             document.getElementById('newTechName').value = '';
             sendToGoogle({ action: "addTech", techName: name }).then(() => alert(name + " added to roster."));
+        }
+
+        // --- NEW: REMOVE FORMER TECH LOGIC ---
+        function removeTech() {
+            const name = document.getElementById('removeTechSelect').value;
+            if(!name) return alert("Please select a tech to remove.");
+            
+            if(!confirm("WARNING: Are you sure you want to permanently remove " + name + " from the active roster?")) return;
+
+            // Remove from the local array immediately so the dropdowns update
+            localTechs = localTechs.filter(t => t !== name);
+            renderInterface();
+            
+            // Tell Google Sheets to delete the row
+            sendToGoogle({ action: "removeTech", techName: name })
+            .then(() => alert(name + " successfully removed from the active roster."));
         }
 
         function addNewHardware() {
