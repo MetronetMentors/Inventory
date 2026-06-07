@@ -496,29 +496,37 @@
             renderLogsTable();
         }
 
-        function renderInventoryTable() {
-            let invTable = document.getElementById('inventoryTableBody');
-            invTable.innerHTML = '';
-            
-            let searchInput = document.getElementById('inventorySearchInput');
+       function renderLogsTable() {
+            let logTable = document.getElementById('logsTableBody');
+            logTable.innerHTML = '';
+            let searchInput = document.getElementById('logSearchInput');
             let searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
 
-            let filteredInventory = localInventory.filter(item => item.name && item.name.toLowerCase().includes(searchTerm));
+            let filteredLogs = localLogs.slice().reverse().filter(log => {
+                if (log.tech === "SYSTEM") return false; 
+                return (log.date && log.date.toString().toLowerCase().includes(searchTerm)) || 
+                       (log.tech && log.tech.toLowerCase().includes(searchTerm)) || 
+                       (log.item && log.item.toLowerCase().includes(searchTerm)) || 
+                       (log.reason && log.reason.toLowerCase().includes(searchTerm));
+            });
 
-            if(filteredInventory.length === 0) {
-                invTable.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:30px;">No matching hardware found in catalog.</td></tr>';
+            if(filteredLogs.length === 0) {
+                logTable.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:30px;">No matching historical records found.</td></tr>';
                 return;
             }
 
-            filteredInventory.forEach(item => {
-                let safeName = item.name.replace(/'/g, "\\'");
-                let qtyColor = item.qty <= 1 ? 'var(--alert)' : 'var(--accent)';
-                let badgeClass = item.trackType === "Serialized" ? "serialized" : "bulk";
-                
-                invTable.innerHTML += `<tr onmousemove="triggerPreview(event, '${safeName}')" onmouseleave="hidePreview()" ontouchstart="triggerPreview(event, '${safeName}')">
-                    <td style="font-weight:500;">${item.name}</td>
-                    <td><span class="badge ${badgeClass}">${item.trackType}</span></td>
-                    <td><strong style="color:${qtyColor}; font-size:16px;">${item.qty}</strong></td>
+            filteredLogs.forEach(log => {
+                let actionColor = "var(--text-main)";
+                if(log.item.includes("Issued:")) actionColor = "var(--primary)";
+                if(log.item.includes("Lost:")) actionColor = "var(--alert)";
+                if(log.item.includes("Swap:")) actionColor = "#f39c12";
+
+                // REMOVED THE BROKEN safeName HOVER LISTENERS HERE
+                logTable.innerHTML += `<tr>
+                    <td style="color:var(--text-muted); font-size:13px;">${log.date}</td>
+                    <td><strong style="color:var(--text-main);">${log.tech}</strong></td>
+                    <td style="font-weight:600; color:${actionColor};">${log.item}</td>
+                    <td style="color:var(--text-muted); font-size:14px;">${log.reason}</td>
                 </tr>`;
             });
         }
