@@ -22,18 +22,15 @@
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
         body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.5; display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
         
-        /* LOGO GLOW EFFECT */
         .brand-logo-nav { background: transparent; width: 100%; object-fit: contain; margin-bottom: 30px; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2)); }
         .brand-logo-dash { background: transparent; width: 180px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.15)); }
         .brand-logo-login { background: transparent; width: 80%; max-width: 220px; margin-bottom: 25px; filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.25)); }
 
-        /* NAVIGATION SIDEBAR */
         .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 25px 20px; transition: transform 0.3s ease; z-index: 100; }
         .nav-btn { background: transparent; border: none; color: var(--text-muted); text-align: left; padding: 14px 20px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
         .nav-btn:hover { background: rgba(126, 63, 242, 0.1); color: var(--text-main); }
         .nav-btn.active { background: var(--primary); color: #fff; box-shadow: 0 4px 15px rgba(126, 63, 242, 0.4); }
         
-        /* CONTENT WINDOWS */
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 0; position: relative; }
         .top-header { display: flex; justify-content: space-between; align-items: center; padding: 25px 40px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
         .header-titles h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.5px; }
@@ -47,7 +44,6 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* FORMS */
         .app-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; padding: 30px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
         .app-card h2 { margin-bottom: 25px; font-size: 20px; color: var(--text-main); }
         .form-group { margin-bottom: 20px; }
@@ -55,15 +51,23 @@
         input, select, textarea { width: 100%; padding: 14px 16px; background: var(--bg-elevated); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; font-size: 15px; transition: all 0.2s; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(126, 63, 242, 0.2); }
         
-        /* DUAL SERIAL NO FIELD POP ACTION */
-        .serial-field-wrap { display: none; background: rgba(126, 63, 242, 0.05); border: 1px dashed var(--primary); padding: 25px; border-radius: 8px; margin-bottom: 20px; animation: slideDown 0.25s ease; }
-        .scan-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 768px) { .scan-row { grid-template-columns: 1fr; gap: 15px; } }
+        /* NEW TRANSACTION TYPE TOGGLES */
+        .tx-type-group { display: flex; gap: 15px; margin-bottom: 25px; background: var(--bg-elevated); padding: 5px; border-radius: 10px; border: 1px solid var(--border); }
+        .tx-type-group label { flex: 1; text-align: center; margin: 0; padding: 12px; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 14px; transition: 0.2s; color: var(--text-muted); }
+        .tx-type-group input[type="radio"] { display: none; }
+        .tx-type-group label:has(input:checked) { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(126, 63, 242, 0.3); }
+
+        .dynamic-section { animation: slideDown 0.3s ease; }
+        .return-block { background: rgba(0, 223, 115, 0.05); border: 1px solid rgba(0, 223, 115, 0.2); padding: 25px; border-radius: 8px; margin-bottom: 20px; }
+        .issue-block { background: rgba(126, 63, 242, 0.05); border: 1px solid rgba(126, 63, 242, 0.2); padding: 25px; border-radius: 8px; margin-bottom: 20px; }
+        .serial-field-wrap { display: none; margin-top: 15px; }
+        
+        .checkbox-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: var(--alert); text-transform: none; margin-top: 15px; }
+        .checkbox-label input { width: 18px; height: 18px; accent-color: var(--alert); }
 
         button.action-btn { background-color: var(--primary); color: #ffffff; border: none; padding: 16px 24px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; transition: all 0.2s; margin-top: 10px; }
         button.action-btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(126, 63, 242, 0.3); }
 
-        /* TABLES */
         table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 10px; }
         th { padding: 0 16px 12px; text-align: left; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; border: none; }
         td { padding: 16px; background: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; }
@@ -92,6 +96,7 @@
             .admin-grid { grid-template-columns: 1fr; }
             .top-header { padding: 15px 20px; }
             .content-container { padding: 20px 20px 80px 20px; }
+            .tx-type-group { flex-direction: column; gap: 5px; }
         }
 
         #imgPreviewBox { position: fixed; display: none; z-index: 1000; background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(10px); border: 2px solid var(--primary); border-radius: 12px; padding: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); pointer-events: none; width: 240px; }
@@ -116,7 +121,7 @@
     <nav class="sidebar" id="sidebar">
         <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-nav">
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; font-weight:600;">Operations</p>
-        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Issue Equipment</button>
+        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Field Transactions</button>
         <button class="nav-btn" onclick="switchTab('inventoryTab')">📊 Live Stock Count</button>
         <button class="nav-btn" onclick="switchTab('logsTab')">📝 Audit Trail</button>
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-top:30px; margin-bottom:10px; font-weight:600;">System Admin</p>
@@ -146,35 +151,51 @@
             
             <div id="issueTab" class="tab-content active">
                 <div class="app-card">
-                    <h2>Log Gear Disbursement</h2>
+                    <h2>Log Field Transaction</h2>
+                    
+                    <div class="tx-type-group">
+                        <label><input type="radio" name="txType" value="issue" checked onchange="toggleTxMode()"> Issue New Gear</label>
+                        <label><input type="radio" name="txType" value="swap" onchange="toggleTxMode()"> Swap Models</label>
+                        <label><input type="radio" name="txType" value="return" onchange="toggleTxMode()"> Return to Base</label>
+                    </div>
+
                     <form id="issueForm">
                         <div class="form-group">
                             <label>Field Technician</label>
                             <select id="techSelect" required><option value="">Loading roster...</option></select>
                         </div>
-                        <div class="form-group">
-                            <label>Hardware Assigned</label>
-                            <select id="equipSelect" onchange="checkTrackingTier()" required><option value="">Loading hardware...</option></select>
-                        </div>
-                        
-                        <div id="serialFieldContainer" class="serial-field-wrap">
-                            <div class="scan-row">
-                                <div>
-                                    <label style="color:var(--primary); font-weight:700;">Scan OUT: New Serial Number</label>
-                                    <input type="text" id="serialNoInput" placeholder="e.g. SN-NEW-1234">
-                                </div>
-                                <div>
-                                    <label style="color:var(--accent); font-weight:700;">Scan IN: Old Serial Number</label>
-                                    <input type="text" id="oldSerialNoInput" placeholder="(Leave blank if not a swap)">
-                                </div>
+
+                        <div id="issueBlock" class="issue-block dynamic-section">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="color:var(--primary);">Issuing Hardware Out</label>
+                                <select id="equipSelect" onchange="checkIssueTier()"><option value="">Loading hardware...</option></select>
+                            </div>
+                            <div id="issueSerialWrap" class="serial-field-wrap">
+                                <label style="color:var(--primary); font-weight:700;">Scan OUT: New Serial Number</label>
+                                <input type="text" id="issueSerialInput" placeholder="e.g. SPLICER-NEW-99823">
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Disbursement Notes</label>
-                            <textarea id="reasonInput" rows="3" placeholder="Reason for replacement or new issue..." required></textarea>
+                        <div id="returnBlock" class="return-block dynamic-section" style="display:none;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="color:var(--accent);">Returning Hardware In</label>
+                                <select id="returnEquipSelect" onchange="checkReturnTier()"><option value="">Loading hardware...</option></select>
+                            </div>
+                            <div id="returnSerialWrap" class="serial-field-wrap">
+                                <label style="color:var(--accent); font-weight:700;">Scan IN: Old Serial Number</label>
+                                <input type="text" id="returnSerialInput" placeholder="e.g. SPLICER-OLD-11234">
+                            </div>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="brokenCheck">
+                                <strong>MARK AS BROKEN / RMA:</strong> Do not add this old unit back into Active Stock.
+                            </label>
                         </div>
-                        <button type="submit" class="action-btn">Log Transaction & Deduct</button>
+
+                        <div class="form-group">
+                            <label>Transaction Notes</label>
+                            <textarea id="reasonInput" rows="3" placeholder="Additional details or condition notes..." required></textarea>
+                        </div>
+                        <button type="submit" class="action-btn" id="submitBtnText">Process Outgoing Disbursement</button>
                     </form>
                 </div>
             </div>
@@ -190,7 +211,7 @@
             <div id="logsTab" class="tab-content">
                 <input type="text" id="logSearchInput" class="search-bar" placeholder="Filter by Tech, Date, or Item..." oninput="renderLogsTable()">
                 <table>
-                    <thead><tr><th>Timestamp</th><th>Technician</th><th>Hardware Item</th><th>Notes</th></tr></thead>
+                    <thead><tr><th>Timestamp</th><th>Technician</th><th>Transaction Record</th><th>Notes</th></tr></thead>
                     <tbody id="logsTableBody"><tr><td colspan="4">Loading records...</td></tr></tbody>
                 </table>
             </div>
@@ -258,21 +279,66 @@
             document.getElementById('sidebar').classList.toggle('open');
         }
 
-        // --- ACCOUNTABILITY TIER DETECTOR ENGINE ---
-        function checkTrackingTier() {
+        // --- NEW TRANSACTION UI CONTROLLER ---
+        function toggleTxMode() {
+            const mode = document.querySelector('input[name="txType"]:checked').value;
+            const issueBlock = document.getElementById('issueBlock');
+            const returnBlock = document.getElementById('returnBlock');
+            const btnText = document.getElementById('submitBtnText');
+            
+            const equipSelect = document.getElementById('equipSelect');
+            const returnSelect = document.getElementById('returnEquipSelect');
+
+            if (mode === "issue") {
+                issueBlock.style.display = 'block';
+                returnBlock.style.display = 'none';
+                equipSelect.required = true;
+                returnSelect.required = false;
+                btnText.innerText = "Process Outgoing Disbursement";
+            } else if (mode === "return") {
+                issueBlock.style.display = 'none';
+                returnBlock.style.display = 'block';
+                equipSelect.required = false;
+                returnSelect.required = true;
+                btnText.innerText = "Process Return Delivery";
+            } else if (mode === "swap") {
+                issueBlock.style.display = 'block';
+                returnBlock.style.display = 'block';
+                equipSelect.required = true;
+                returnSelect.required = true;
+                btnText.innerText = "Process Hardware Swap";
+            }
+        }
+
+        function checkIssueTier() {
             const selectedItemName = document.getElementById('equipSelect').value;
             const targetAsset = localInventory.find(i => i.name === selectedItemName);
-            const serialWrapper = document.getElementById('serialFieldContainer');
-            const serialInput = document.getElementById('serialNoInput');
+            const serialWrapper = document.getElementById('issueSerialWrap');
+            const serialInput = document.getElementById('issueSerialInput');
 
             if (targetAsset && targetAsset.trackType === "Serialized") {
                 serialWrapper.style.display = 'block';
-                serialInput.required = true; // Still require the new unit's serial number
+                serialInput.required = true;
             } else {
                 serialWrapper.style.display = 'none';
                 serialInput.required = false;
                 serialInput.value = '';
-                document.getElementById('oldSerialNoInput').value = '';
+            }
+        }
+
+        function checkReturnTier() {
+            const selectedItemName = document.getElementById('returnEquipSelect').value;
+            const targetAsset = localInventory.find(i => i.name === selectedItemName);
+            const serialWrapper = document.getElementById('returnSerialWrap');
+            const serialInput = document.getElementById('returnSerialInput');
+
+            if (targetAsset && targetAsset.trackType === "Serialized") {
+                serialWrapper.style.display = 'block';
+                serialInput.required = true;
+            } else {
+                serialWrapper.style.display = 'none';
+                serialInput.required = false;
+                serialInput.value = '';
             }
         }
 
@@ -376,12 +442,17 @@
             });
 
             let equipSelect = document.getElementById('equipSelect');
+            let returnEquipSelect = document.getElementById('returnEquipSelect');
             let adjustSelect = document.getElementById('adjustItemSelect');
+            
             equipSelect.innerHTML = '<option value="" disabled selected>-- Select Hardware --</option>';
+            returnEquipSelect.innerHTML = '<option value="" disabled selected>-- Select Hardware --</option>';
             adjustSelect.innerHTML = '<option value="" disabled selected>-- Select Asset --</option>';
+            
             localInventory.forEach(item => {
                 let optionHtml = `<option value="${item.name}">${item.name}</option>`;
                 equipSelect.innerHTML += optionHtml;
+                returnEquipSelect.innerHTML += optionHtml;
                 adjustSelect.innerHTML += optionHtml;
             });
 
@@ -449,11 +520,16 @@
             }
 
             filteredLogs.forEach(log => {
-                let safeName = log.item.replace(/'/g, "\\'");
-                logTable.innerHTML += `<tr onmousemove="triggerPreview(event, '${safeName}')" onmouseleave="hidePreview()" ontouchstart="triggerPreview(event, '${safeName}')">
+                // Determine color formatting based on transaction type keywords in the string
+                let actionColor = "var(--text-main)";
+                if(log.item.includes("Issued:")) actionColor = "var(--primary)";
+                if(log.item.includes("Returned:")) actionColor = "var(--accent)";
+                if(log.item.includes("Swap:")) actionColor = "#f39c12";
+
+                logTable.innerHTML += `<tr>
                     <td style="color:var(--text-muted); font-size:13px;">${log.date}</td>
-                    <td><strong style="color:var(--primary);">${log.tech}</strong></td>
-                    <td style="font-weight:500;">${log.item}</td>
+                    <td><strong style="color:var(--text-main);">${log.tech}</strong></td>
+                    <td style="font-weight:600; color:${actionColor};">${log.item}</td>
                     <td style="color:var(--text-muted); font-size:14px;">${log.reason}</td>
                 </tr>`;
             });
@@ -469,40 +545,81 @@
 
         document.getElementById('issueForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const tName = document.getElementById('techSelect').value;
-            const eName = document.getElementById('equipSelect').value;
-            let rNote = document.getElementById('reasonInput').value;
             
-            // Collect both serial numbers
-            const serialNo = document.getElementById('serialNoInput').value.trim();
-            const oldSerialNo = document.getElementById('oldSerialNoInput').value.trim();
+            const mode = document.querySelector('input[name="txType"]:checked').value;
+            const tName = document.getElementById('techSelect').value;
+            
+            const issueName = document.getElementById('equipSelect').value;
+            const issueSerial = document.getElementById('issueSerialInput').value.trim();
+            
+            const returnName = document.getElementById('returnEquipSelect').value;
+            const returnSerial = document.getElementById('returnSerialInput').value.trim();
+            const isBroken = document.getElementById('brokenCheck').checked;
+            
+            const rawNotes = document.getElementById('reasonInput').value;
 
-            // Format them cleanly into the audit trail note
-            if(serialNo || oldSerialNo) {
-                let swapString = "";
-                if(serialNo) swapString += "[ISSUED: " + serialNo + "] ";
-                if(oldSerialNo) swapString += "[RETURNED: " + oldSerialNo + "] ";
-                rNote = swapString + "— " + rNote;
+            let mainItemRecord = "";
+            let finalNote = "";
+            let returnToStockFlag = "false";
+
+            // --- ROUTING LOGIC BASED ON TRANSACTION TYPE ---
+            if (mode === "issue") {
+                mainItemRecord = "Issued: " + issueName;
+                finalNote = (issueSerial ? "[S/N OUT: " + issueSerial + "] " : "") + rawNotes;
+                
+                // Local Math Update
+                for(let item of localInventory) { if(item.name === issueName) item.qty = Math.max(0, item.qty - 1); }
+
+            } else if (mode === "return") {
+                mainItemRecord = "Returned: " + returnName;
+                finalNote = (returnSerial ? "[S/N IN: " + returnSerial + "] " : "") + rawNotes;
+                if(isBroken) finalNote += " [SENT TO RMA/BROKEN]";
+                returnToStockFlag = isBroken ? "false" : "true";
+                
+                // Local Math Update
+                if(!isBroken) { for(let item of localInventory) { if(item.name === returnName) item.qty += 1; } }
+
+            } else if (mode === "swap") {
+                mainItemRecord = "Swap: " + returnName + " ➔ " + issueName;
+                if(issueSerial) finalNote += "[S/N OUT: " + issueSerial + "] ";
+                if(returnSerial) finalNote += "[S/N IN: " + returnSerial + "] ";
+                finalNote += rawNotes;
+                if(isBroken) finalNote += " [OLD UNIT TO RMA]";
+                returnToStockFlag = isBroken ? "false" : "true";
+
+                // Local Math Update
+                for(let item of localInventory) { if(item.name === issueName) item.qty = Math.max(0, item.qty - 1); }
+                if(!isBroken) { for(let item of localInventory) { if(item.name === returnName) item.qty += 1; } }
             }
 
-            for(let item of localInventory) {
-                if(item.name === eName) { item.qty = Math.max(0, item.qty - 1); break; }
-            }
-            localLogs.push({ date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), tech: tName, item: eName, reason: rNote });
+            // Push to local array for instant UI update
+            localLogs.push({ date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), tech: tName, item: mainItemRecord, reason: finalNote });
             
             renderInterface();
-            document.getElementById('serialFieldContainer').style.display = 'none';
+            
+            // Clean up the form
+            document.getElementById('issueSerialInput').value = '';
+            document.getElementById('returnSerialInput').value = '';
+            document.getElementById('reasonInput').value = '';
+            document.getElementById('brokenCheck').checked = false;
 
-            sendToGoogle({ action: "issueEquipment", techName: tName, equipment: eName, reason: rNote })
+            // Transmit the precise payload to Google
+            sendToGoogle({ 
+                action: "issueEquipment", 
+                techName: tName, 
+                mainItemName: mainItemRecord,
+                logNote: finalNote,
+                issueName: mode === "return" ? "" : issueName,
+                returnName: mode === "issue" ? "" : returnName,
+                returnToStock: returnToStockFlag
+            })
             .then(() => {
-                alert("Equipment logged! Inventory updated.");
-                document.getElementById('reasonInput').value = '';
-                document.getElementById('serialNoInput').value = '';
-                document.getElementById('oldSerialNoInput').value = ''; // Reset the old serial scanner
+                alert("Transaction logged & Inventory automatically balanced!");
                 switchTab('inventoryTab');
             });
         });
 
+        // --- ADMIN FUNCTIONS ---
         function addNewTech() {
             const name = document.getElementById('newTechName').value.trim();
             if(!name) return alert("Please provide an employee name.");
@@ -515,25 +632,19 @@
         function removeTech() {
             const name = document.getElementById('removeTechSelect').value;
             if(!name) return alert("Please select a tech to remove.");
-            
             if(!confirm("WARNING: Are you sure you want to permanently remove " + name + " from the active roster?")) return;
-
             localTechs = localTechs.filter(t => t !== name);
             renderInterface();
-            
-            sendToGoogle({ action: "removeTech", techName: name })
-            .then(() => alert(name + " successfully removed from the active roster."));
+            sendToGoogle({ action: "removeTech", techName: name }).then(() => alert(name + " successfully removed."));
         }
 
         function addNewHardware() {
             const name = document.getElementById('newHardwareName').value.trim();
             const tier = document.getElementById('newHardwareTier').value;
             if(!name) return alert("Please provide a hardware model name.");
-            
             localInventory.push({ name: name, qty: 0, img: "", trackType: tier });
             renderInterface();
             document.getElementById('newHardwareName').value = '';
-            
             sendToGoogle({ action: "addHardware", itemName: name, trackType: tier }).then(() => alert(name + " registered in catalog as " + tier + "."));
         }
 
@@ -541,16 +652,11 @@
             const item = document.getElementById('adjustItemSelect').value;
             const qty = parseInt(document.getElementById('adjustQtyInput').value);
             if(!item || isNaN(qty)) return alert("Specify asset and exact unit amount.");
-            
-            for(let asset of localInventory) {
-                if(asset.name === item) { asset.qty = qty; break; }
-            }
+            for(let asset of localInventory) { if(asset.name === item) { asset.qty = qty; break; } }
             localLogs.push({ date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(), tech: "SYSTEM", item: item, reason: "Manual adjustment to: " + qty });
-            
             renderInterface();
             document.getElementById('adjustQtyInput').value = '';
-            sendToGoogle({ action: "adjustStock", equipment: item, newQty: qty })
-            .then(() => alert(item + " level forced to " + qty + "."));
+            sendToGoogle({ action: "adjustStock", equipment: item, newQty: qty }).then(() => alert(item + " level forced to " + qty + "."));
         }
     </script>
 </body>
