@@ -191,7 +191,7 @@
                             </div>
                             <label id="brokenCheckWrap" class="checkbox-label">
                                 <input type="checkbox" id="brokenCheck">
-                                <strong>MARK AS BROKEN / RMA:</strong> Do not add this old unit back into Active Stock.
+                                <strong>MARK AS BROKEN / RMA:</strong> Do not add this old unit back into Stock.
                             </label>
                         </div>
 
@@ -418,7 +418,7 @@
 
         function requireAdminPassword() {
             const pass = prompt("Enter Supervisor Admin Password:");
-            if (pass === "Super2026") {
+            if (pass === "GunBros") {
                 switchTab('adminTab');
             } else if (pass !== null) {
                 alert("Incorrect authorization.");
