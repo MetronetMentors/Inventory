@@ -20,8 +20,6 @@
         }
         
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-        
-        /* --- BUG FIX 1: Added 100dvh fallback for mobile browsers --- */
         body { background-color: var(--bg-base); color: var(--text-main); line-height: 1.5; display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
         
         /* LOGO GLOW EFFECT */
@@ -29,39 +27,41 @@
         .brand-logo-dash { background: transparent; width: 180px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.15)); }
         .brand-logo-login { background: transparent; width: 80%; max-width: 220px; margin-bottom: 25px; filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.25)); }
 
-        /* SLEEK SIDEBAR NAVIGATION */
+        /* NAVIGATION SIDEBAR */
         .sidebar { width: 280px; background: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 25px 20px; transition: transform 0.3s ease; z-index: 100; }
         .nav-btn { background: transparent; border: none; color: var(--text-muted); text-align: left; padding: 14px 20px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; display: flex; align-items: center; gap: 12px; }
         .nav-btn:hover { background: rgba(126, 63, 242, 0.1); color: var(--text-main); }
         .nav-btn.active { background: var(--primary); color: #fff; box-shadow: 0 4px 15px rgba(126, 63, 242, 0.4); }
         
-        /* MAIN CONTENT AREA */
+        /* CONTENT WINDOWS */
         .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 0; position: relative; }
         .top-header { display: flex; justify-content: space-between; align-items: center; padding: 25px 40px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
         .header-titles h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.5px; }
         .header-titles p { color: var(--accent); font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* DYNAMIC ALERTS */
         .alert-banner { background: rgba(255, 71, 87, 0.1); border-left: 4px solid var(--alert); color: var(--text-main); padding: 16px 20px; margin: 30px 40px 0; border-radius: 0 8px 8px 0; display: none; align-items: center; gap: 15px; font-weight: 500; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: slideDown 0.3s ease; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* CONTENT TABS */
         .content-container { padding: 30px 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* FORM & INPUT STYLING */
+        /* FORMS */
         .app-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; padding: 30px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
         .app-card h2 { margin-bottom: 25px; font-size: 20px; color: var(--text-main); }
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
         input, select, textarea { width: 100%; padding: 14px 16px; background: var(--bg-elevated); color: var(--text-main); border: 1px solid var(--border); border-radius: 8px; font-size: 15px; transition: all 0.2s; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(126, 63, 242, 0.2); }
+        
+        /* SERIAL NO FIELD POP ACTION */
+        .serial-field-wrap { display: none; background: rgba(126, 63, 242, 0.05); border: 1px dashed var(--primary); padding: 20px; border-radius: 8px; margin-bottom: 20px; animation: slideDown 0.25s ease; }
+
         button.action-btn { background-color: var(--primary); color: #ffffff; border: none; padding: 16px 24px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; transition: all 0.2s; margin-top: 10px; }
         button.action-btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(126, 63, 242, 0.3); }
 
-        /* CARD-BASED TABLES */
+        /* TABLES */
         table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 10px; }
         th { padding: 0 16px 12px; text-align: left; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; border: none; }
         td { padding: 16px; background: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; }
@@ -69,17 +69,18 @@
         td:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
         tr:hover td { background: var(--bg-elevated); transform: scale(1.01); box-shadow: 0 4px 12px rgba(0,0,0,0.5); cursor: pointer; }
 
-        /* SEARCH BAR */
+        .badge { padding: 4px 8px; font-size: 11px; font-weight: 700; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge.serialized { background: rgba(126, 63, 242, 0.2); color: #b388ff; border: 1px solid rgba(126, 63, 242, 0.4); }
+        .badge.bulk { background: rgba(164, 176, 190, 0.15); color: var(--text-muted); }
+
         .search-bar { width: 100%; padding: 14px 14px 14px 44px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; margin-bottom: 10px; background: var(--bg-surface) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23a4b0be" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 14px center; color: var(--text-main); }
         .search-bar:focus { border-color: var(--primary); background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%237E3FF2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>'); }
 
-        /* ADMIN & LOGIN */
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         
         #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: linear-gradient(rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.95)), url('https://dm12lgf5m7bd0.cloudfront.net/page/grid/metronet-blog-state-colorado.webp') no-repeat center center; background-size: cover; display:flex; justify-content:center; align-items:center; z-index:999; backdrop-filter: blur(8px); }
         .login-box { background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(15px); padding: 50px 40px; border-radius: 16px; border: 1px solid var(--border); text-align: center; max-width: 420px; width: 90%; box-shadow: 0 25px 60px rgba(0,0,0,0.9); }
 
-        /* MOBILE MENU TOGGLE */
         .menu-toggle { display: none; background: none; border: none; color: var(--text-main); font-size: 24px; cursor: pointer; }
         
         @media (max-width: 900px) {
@@ -88,11 +89,9 @@
             .menu-toggle { display: block; }
             .admin-grid { grid-template-columns: 1fr; }
             .top-header { padding: 15px 20px; }
-            /* --- BUG FIX 2: Added 80px bottom cushion so the last button isn't cut off --- */
             .content-container { padding: 20px 20px 80px 20px; }
         }
 
-        /* FLOATING IMAGE OVERLAY */
         #imgPreviewBox { position: fixed; display: none; z-index: 1000; background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(10px); border: 2px solid var(--primary); border-radius: 12px; padding: 10px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); pointer-events: none; width: 240px; }
         #imgPreviewBox img { width: 100%; border-radius: 6px; display: block; object-fit: contain; }
     </style>
@@ -114,18 +113,15 @@
 
     <nav class="sidebar" id="sidebar">
         <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-nav">
-        
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; font-weight:600;">Operations</p>
         <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Issue Equipment</button>
         <button class="nav-btn" onclick="switchTab('inventoryTab')">📊 Live Stock Count</button>
         <button class="nav-btn" onclick="switchTab('logsTab')">📝 Audit Trail</button>
-        
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; margin-top:30px; margin-bottom:10px; font-weight:600;">System Admin</p>
         <button class="nav-btn" onclick="requireAdminPassword()">⚙️ Settings & Catalog</button>
     </nav>
 
     <main class="main-content">
-        
         <header class="top-header">
             <div style="display:flex; align-items:center; gap:15px;">
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
@@ -156,11 +152,17 @@
                         </div>
                         <div class="form-group">
                             <label>Hardware Assigned</label>
-                            <select id="equipSelect" required><option value="">Loading hardware...</option></select>
+                            <select id="equipSelect" onchange="checkTrackingTier()" required><option value="">Loading hardware...</option></select>
                         </div>
+                        
+                        <div id="serialFieldContainer" class="serial-field-wrap">
+                            <label style="color:var(--primary); font-weight:700;">Scan Barcode / Enter Tool Serial Number</label>
+                            <input type="text" id="serialNoInput" placeholder="e.g. SPLICER-FX-99823">
+                        </div>
+
                         <div class="form-group">
                             <label>Disbursement Notes</label>
-                            <textarea id="reasonInput" rows="3" placeholder="Reason for new unit or condition of old unit..." required></textarea>
+                            <textarea id="reasonInput" rows="3" placeholder="Reason for replacement..." required></textarea>
                         </div>
                         <button type="submit" class="action-btn">Log Transaction & Deduct</button>
                     </form>
@@ -170,32 +172,29 @@
             <div id="inventoryTab" class="tab-content">
                 <input type="text" id="inventorySearchInput" class="search-bar" placeholder="Search Hardware Catalog..." oninput="renderInventoryTable()">
                 <table>
-                    <thead><tr><th>Hardware Model</th><th>Available Units</th></tr></thead>
-                    <tbody id="inventoryTableBody"><tr><td colspan="2">Loading catalog...</td></tr></tbody>
+                    <thead><tr><th>Hardware Model</th><th>Tracking Tier</th><th>Available Units</th></tr></thead>
+                    <tbody id="inventoryTableBody"><tr><td colspan="3">Loading catalog...</td></tr></tbody>
                 </table>
             </div>
 
             <div id="logsTab" class="tab-content">
                 <input type="text" id="logSearchInput" class="search-bar" placeholder="Filter by Tech, Date, or Item..." oninput="renderLogsTable()">
                 <table>
-                    <thead><tr><th>Timestamp</th><th>Technician</th><th>Hardware</th><th>Notes</th></tr></thead>
+                    <thead><tr><th>Timestamp</th><th>Technician</th><th>Hardware Item</th><th>Notes</th></tr></thead>
                     <tbody id="logsTableBody"><tr><td colspan="4">Loading records...</td></tr></tbody>
                 </table>
             </div>
 
             <div id="adminTab" class="tab-content">
                 <div class="admin-grid">
-                    
                     <div class="app-card">
                         <h2>Team Roster Management</h2>
                         <div class="form-group">
                             <label>Add New Employee</label>
-                            <input type="text" id="newTechName" placeholder="e.g. Jane Doe">
+                            <input type="text" id="newTechName" placeholder="Full Name">
                         </div>
                         <button class="action-btn" onclick="addNewTech()">Add to Roster</button>
-
                         <hr style="border: 0; border-top: 1px solid var(--border); margin: 25px 0;">
-
                         <div class="form-group">
                             <label>Remove Former Employee</label>
                             <select id="removeTechSelect"><option value="">Loading roster...</option></select>
@@ -207,7 +206,14 @@
                         <h2>Hardware Catalog</h2>
                         <div class="form-group">
                             <label>Model Name</label>
-                            <input type="text" id="newHardwareName" placeholder="e.g. Ruckus R550">
+                            <input type="text" id="newHardwareName" placeholder="e.g. Fusion Splicer X5">
+                        </div>
+                        <div class="form-group">
+                            <label>Tracking Accountability Tier</label>
+                            <select id="newHardwareTier">
+                                <option value="Bulk">Bulk Tool (Qty Only)</option>
+                                <option value="Serialized">High-Value Serialized (Requires Scan)</option>
+                            </select>
                         </div>
                         <button class="action-btn" onclick="addNewHardware()">Add Hardware</button>
                     </div>
@@ -240,6 +246,23 @@
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // --- ACCOUNTABILITY TIER DETECTOR ENGINE ---
+        function checkTrackingTier() {
+            const selectedItemName = document.getElementById('equipSelect').value;
+            const targetAsset = localInventory.find(i => i.name === selectedItemName);
+            const serialWrapper = document.getElementById('serialFieldContainer');
+            const serialInput = document.getElementById('serialNoInput');
+
+            if (targetAsset && targetAsset.trackType === "Serialized") {
+                serialWrapper.style.display = 'block';
+                serialInput.required = true;
+            } else {
+                serialWrapper.style.display = 'none';
+                serialInput.required = false;
+                serialInput.value = '';
+            }
         }
 
         const previewBox = document.getElementById('imgPreviewBox');
@@ -295,7 +318,7 @@
 
         function requireAdminPassword() {
             const pass = prompt("Enter Supervisor Admin Password:");
-            if (pass === "GunBros") {
+            if (pass === "Super2026") {
                 switchTab('adminTab');
             } else if (pass !== null) {
                 alert("Incorrect authorization.");
@@ -378,15 +401,18 @@
             let filteredInventory = localInventory.filter(item => item.name && item.name.toLowerCase().includes(searchTerm));
 
             if(filteredInventory.length === 0) {
-                invTable.innerHTML = '<tr><td colspan="2" style="text-align:center; color:var(--text-muted); padding:30px;">No matching hardware found in catalog.</td></tr>';
+                invTable.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:30px;">No matching hardware found in catalog.</td></tr>';
                 return;
             }
 
             filteredInventory.forEach(item => {
                 let safeName = item.name.replace(/'/g, "\\'");
                 let qtyColor = item.qty <= 1 ? 'var(--alert)' : 'var(--accent)';
+                let badgeClass = item.trackType === "Serialized" ? "serialized" : "bulk";
+                
                 invTable.innerHTML += `<tr onmousemove="triggerPreview(event, '${safeName}')" onmouseleave="hidePreview()" ontouchstart="triggerPreview(event, '${safeName}')">
                     <td style="font-weight:500;">${item.name}</td>
+                    <td><span class="badge ${badgeClass}">${item.trackType}</span></td>
                     <td><strong style="color:${qtyColor}; font-size:16px;">${item.qty}</strong></td>
                 </tr>`;
             });
@@ -434,7 +460,13 @@
             e.preventDefault();
             const tName = document.getElementById('techSelect').value;
             const eName = document.getElementById('equipSelect').value;
-            const rNote = document.getElementById('reasonInput').value;
+            let rNote = document.getElementById('reasonInput').value;
+            const serialNo = document.getElementById('serialNoInput').value.trim();
+
+            // If it's a serialized tool, inject the Serial/Asset Tag right into the permanent note string
+            if(serialNo) {
+                rNote = "[S/N: " + serialNo + "] — " + rNote;
+            }
 
             for(let item of localInventory) {
                 if(item.name === eName) { item.qty = Math.max(0, item.qty - 1); break; }
@@ -442,11 +474,13 @@
             localLogs.push({ date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), tech: tName, item: eName, reason: rNote });
             
             renderInterface();
+            document.getElementById('serialFieldContainer').style.display = 'none';
 
             sendToGoogle({ action: "issueEquipment", techName: tName, equipment: eName, reason: rNote })
             .then(() => {
                 alert("Equipment logged! Inventory updated.");
                 document.getElementById('reasonInput').value = '';
+                document.getElementById('serialNoInput').value = '';
                 switchTab('inventoryTab');
             });
         });
@@ -475,11 +509,14 @@
 
         function addNewHardware() {
             const name = document.getElementById('newHardwareName').value.trim();
+            const tier = document.getElementById('newHardwareTier').value;
             if(!name) return alert("Please provide a hardware model name.");
-            localInventory.push({ name: name, qty: 0 });
+            
+            localInventory.push({ name: name, qty: 0, img: "", trackType: tier });
             renderInterface();
             document.getElementById('newHardwareName').value = '';
-            sendToGoogle({ action: "addHardware", itemName: name }).then(() => alert(name + " registered in catalog."));
+            
+            sendToGoogle({ action: "addHardware", itemName: name, trackType: tier }).then(() => alert(name + " registered in catalog as " + tier + "."));
         }
 
         function adjustStockLevel() {
