@@ -289,9 +289,9 @@
         <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-nav">
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; font-weight:700;">Operations Center</p>
-        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Gear Transactions</button>
+        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Gear Allocation</button>
         <button class="nav-btn" onclick="switchTab('inventoryTab')">📊 Live Stock Count</button>
-        <button class="nav-btn" onclick="switchTab('logsTab')">📝 Logs</button>
+        <button class="nav-btn" onclick="switchTab('logsTab')">📝 Allocation Logs</button>
         <button class="nav-btn" onclick="switchTab('analyticsTab')">📈 Analytics</button>
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-top:35px; margin-bottom:12px; font-weight:700;">System Admin</p>
@@ -313,7 +313,7 @@
             
             <div id="issueTab" class="tab-content active">
                 <div class="app-card">
-                    <h2>Log Field Transaction</h2>
+                    <h2>Log Gear Allocation</h2>
                     <div class="tx-type-group">
                         <label><input type="radio" name="txType" value="swap" checked onchange="toggleTxMode()"> Issue / Swap Gear</label>
                         <label><input type="radio" name="txType" value="return" onchange="toggleTxMode()"> Report Lost Tool</label>
@@ -331,10 +331,10 @@
                             <div id="issueBlock" class="issue-block dynamic-section">
                                 <div class="form-group" style="margin-bottom:0;">
                                     <label style="color:var(--primary);">Issuing Hardware Out</label>
-                                    <select id="equipSelect" onchange="checkIssueTier()"><option value="">Loading hardware...</option></select>
+                                    <select id="equipSelect" onchange="checkIssueTier()"><option value="">Loading Hardware...</option></select>
                                 </div>
                                 <div id="issueSerialWrap" class="serial-field-wrap">
-                                    <label style="color:var(--primary); font-weight:700;">Scan OUT: New Serial Number</label>
+                                    <label style="color:var(--primary); font-weight:700;">Scan OUT: Serial Number</label>
                                     <div class="input-wrap">
                                         <input type="text" id="issueSerialInput" placeholder="e.g. SPLICER-NEW-99823">
                                         <button type="button" class="cam-btn" onclick="startScanner('issueSerialInput')" title="Scan Barcode">📷</button>
@@ -344,11 +344,11 @@
 
                             <div id="returnBlock" class="return-block dynamic-section">
                                 <div class="form-group" style="margin-bottom:0;">
-                                    <label id="returnLabel" style="color:var(--accent);">Returning Hardware In (Optional)</label>
-                                    <select id="returnEquipSelect" onchange="checkReturnTier()"><option value="">Loading hardware...</option></select>
+                                    <label id="returnLabel" style="color:var(--accent);">Returning Hardware (Optional)</label>
+                                    <select id="returnEquipSelect" onchange="checkReturnTier()"><option value="">Loading Hardware...</option></select>
                                 </div>
                                 <div id="returnSerialWrap" class="serial-field-wrap">
-                                    <label id="returnSerialLabel" style="color:var(--accent); font-weight:700;">Scan IN: Old Serial Number</label>
+                                    <label id="returnSerialLabel" style="color:var(--accent); font-weight:700;">Scan IN: Serial Number</label>
                                     <div class="input-wrap">
                                         <input type="text" id="returnSerialInput" placeholder="e.g. SPLICER-OLD-11234">
                                         <button type="button" class="cam-btn" style="color:var(--accent); border-color: rgba(0, 223, 115, 0.3); background: rgba(0, 223, 115, 0.1);" onclick="startScanner('returnSerialInput')" title="Scan Barcode">📷</button>
@@ -362,10 +362,10 @@
 
                             <div class="flag-block dynamic-section">
                                 <div class="form-group" style="margin-bottom: 0;">
-                                    <label style="color: #f39c12;">Flag Mentors & Supervisors</label>
+                                    <label style="color: #f39c12;">Flag Gear Allocation</label>
                                     <label class="checkbox-label" style="color: #f39c12; margin-top: 15px;">
                                         <input type="checkbox" id="flagSupCheck" onchange="document.getElementById('supMessageWrap').style.display = this.checked ? 'block' : 'none';">
-                                        <span><strong>FLAG FOR REVIEW:</strong> Alert leadership to this transaction.</span>
+                                        <span><strong>FLAG FOR REVIEW:</strong> Alert leadership to this.</span>
                                     </label>
                                 </div>
                                 <div id="supMessageWrap" style="display:none; margin-top: 15px;">
@@ -375,12 +375,12 @@
 
                             <div class="notes-block dynamic-section">
                                 <div class="form-group" style="margin-bottom: 0; height: 100%; display: flex; flex-direction: column;">
-                                    <label style="color: var(--text-main);">Transaction Notes</label>
+                                    <label style="color: var(--text-main);">Notes</label>
                                     <textarea id="reasonInput" placeholder="Condition notes or reason for lost hardware..." required style="flex: 1; resize: vertical; min-height: 80px;"></textarea>
                                 </div>
                             </div>
 
-                        </div> <button type="submit" class="action-btn" id="submitBtnText">Process Transaction</button>
+                        </div> <button type="submit" class="action-btn" id="submitBtnText">Process Allocation</button>
                     </form>
                 </div>
             </div>
@@ -396,7 +396,7 @@
             <div id="logsTab" class="tab-content">
                 <input type="text" id="logSearchInput" class="search-bar" placeholder="Filter by Tech, Date, or Item..." oninput="renderLogsTable()">
                 <table>
-                    <thead><tr><th>Timestamp</th><th>Technician</th><th>Transaction Record</th><th>Notes</th></tr></thead>
+                    <thead><tr><th>Timestamp</th><th>Technician</th><th>Allocation Record</th><th>Notes</th></tr></thead>
                     <tbody id="logsTableBody"><tr><td colspan="4">Loading records...</td></tr></tbody>
                 </table>
             </div>
