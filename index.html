@@ -94,7 +94,7 @@
         .header-titles h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.5px; color: #fff; }
         .header-titles p { color: var(--text-muted); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; }
         
-        .alert-banner { background: rgba(255, 71, 87, 0.08); border: 1px solid rgba(255, 71, 87, 0.2); border-left: 4px solid var(--alert); color: var(--text-main); padding: 16px 20px; margin: 30px 50px 0; border-radius: 8px; display: none; align-items: center; gap: 15px; font-weight: 500; box-shadow: 0 10px 25px rgba(255,71,87,0.05); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .alert-banner { background: rgba(255, 71, 87, 0.08); border: 1px solid rgba(255, 71, 87, 0.2); border-left: 4px solid var(--alert); color: var(--text-main); padding: 16px 20px; margin-bottom: 25px; border-radius: 8px; display: none; align-items: center; gap: 15px; font-weight: 500; box-shadow: 0 10px 25px rgba(255,71,87,0.05); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 100%; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
 
         .content-container { padding: 35px 50px; max-width: 1400px; margin: 0 auto; width: 100%; }
@@ -298,14 +298,6 @@
             </div>
         </header>
 
-        <div id="lowStockAlert" class="alert-banner">
-            <span style="font-size:22px;">⚠️</span>
-            <div>
-                <strong style="display:block; font-size:15px; color: var(--alert);">Critical Stock Level Detected</strong>
-                <span id="lowStockItemsText" style="font-size:13px; color:var(--text-muted);">Calculating levels...</span>
-            </div>
-        </div>
-
         <div class="content-container">
             
             <div id="issueTab" class="tab-content active">
@@ -400,6 +392,15 @@
             </div>
 
             <div id="adminTab" class="tab-content">
+                
+                <div id="lowStockAlert" class="alert-banner">
+                    <span style="font-size:22px;">⚠️</span>
+                    <div>
+                        <strong style="display:block; font-size:15px; color: var(--alert);">Critical Stock Level Detected</strong>
+                        <span id="lowStockItemsText" style="font-size:13px; color:var(--text-muted);">Calculating levels...</span>
+                    </div>
+                </div>
+
                 <div class="admin-grid">
                     <div class="app-card">
                         <h2>Team Roster Management</h2>
@@ -614,14 +615,6 @@
             }
             document.getElementById('sidebar').classList.remove('open');
 
-            let alertBox = document.getElementById('lowStockAlert');
-            let lowStockItems = localInventory.filter(item => item.qty <= 1);
-            if (tabId === 'adminTab' || lowStockItems.length === 0) {
-                alertBox.style.display = 'none';
-            } else {
-                alertBox.style.display = 'flex';
-            }
-
             if (tabId === 'analyticsTab') { renderAnalyticsChart(); }
         }
 
@@ -690,15 +683,15 @@
                 adjustSelect.innerHTML += optionHtml;
             });
 
+            // UPDATED: Alert box logic (Now displays inside Admin Tab only if stock is low)
             let lowStockItems = localInventory.filter(item => item.qty <= 1);
             let alertBox = document.getElementById('lowStockAlert');
             let alertText = document.getElementById('lowStockItemsText');
-            let isAdminActive = document.getElementById('adminTab').classList.contains('active');
             
             if(lowStockItems.length > 0) {
                 let names = lowStockItems.map(i => `${i.name} (${i.qty} left)`).join(' • ');
                 alertText.innerText = names;
-                alertBox.style.display = isAdminActive ? 'none' : 'flex';
+                alertBox.style.display = 'flex';
             } else {
                 alertBox.style.display = 'none';
             }
