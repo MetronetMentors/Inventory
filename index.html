@@ -97,9 +97,7 @@
         .alert-banner { background: rgba(255, 71, 87, 0.08); border: 1px solid rgba(255, 71, 87, 0.2); border-left: 4px solid var(--alert); color: var(--text-main); padding: 16px 20px; margin-bottom: 25px; border-radius: 8px; display: none; align-items: center; gap: 15px; font-weight: 500; box-shadow: 0 10px 25px rgba(255,71,87,0.05); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 100%; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* CHANGED: Tighter max-width to fix the wide stretching on desktop */
-        .content-container { padding: 35px 50px; max-width: 1000px; margin: 0 auto; width: 100%; }
-        
+        .content-container { padding: 35px 50px; max-width: 1400px; margin: 0 auto; width: 100%; }
         .tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -108,12 +106,15 @@
             background: var(--bg-surface); 
             border: 1px solid rgba(255,255,255,0.04); 
             border-radius: 16px; 
-            padding: 35px; 
+            padding: 40px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05); 
         }
         .app-card h2 { margin-bottom: 30px; font-size: 22px; font-weight: 600; color: #fff; letter-spacing: -0.3px; }
         
+        /* NEW DESKTOP GRID LAYOUT */
+        .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .form-group { margin-bottom: 24px; }
+        
         label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; }
         
         .input-wrap { display: flex; gap: 10px; }
@@ -139,16 +140,15 @@
         .tx-type-group input[type="radio"] { display: none; }
         .tx-type-group label:has(input:checked) { background: var(--primary); color: white; box-shadow: 0 8px 20px var(--primary-glow); transform: scale(1.02); }
 
-        .dynamic-section { animation: slideDown 0.3s ease; }
-        .return-block { background: linear-gradient(145deg, rgba(0, 223, 115, 0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(0, 223, 115, 0.15); padding: 25px; border-radius: 12px; margin-bottom: 24px; transition: all 0.3s; }
-        .issue-block { background: linear-gradient(145deg, rgba(126, 63, 242, 0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(126, 63, 242, 0.15); padding: 25px; border-radius: 12px; margin-bottom: 24px; }
+        .dynamic-section { animation: slideDown 0.3s ease; height: 100%; display: flex; flex-direction: column; }
+        .return-block { background: linear-gradient(145deg, rgba(0, 223, 115, 0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(0, 223, 115, 0.15); padding: 25px; border-radius: 12px; margin-bottom: 0px; transition: all 0.3s; flex: 1; }
+        .issue-block { background: linear-gradient(145deg, rgba(126, 63, 242, 0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(126, 63, 242, 0.15); padding: 25px; border-radius: 12px; margin-bottom: 0px; flex: 1; }
         .serial-field-wrap { display: none; margin-top: 20px; }
         
-        /* CHANGED: Fixed Checkbox alignments for mobile wrapping */
         .checkbox-label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-size: 14px; color: var(--alert); text-transform: none; margin-top: 15px; font-weight: 500; line-height: 1.4; }
         .checkbox-label input { width: 20px; height: 20px; accent-color: var(--alert); cursor: pointer; flex-shrink: 0; margin-top: 0px; }
 
-        .flag-box { background: rgba(243, 156, 18, 0.05); padding: 25px; border-radius: 12px; margin-bottom: 24px; border: 1px solid rgba(243, 156, 18, 0.2); }
+        .flag-box { background: rgba(243, 156, 18, 0.05); padding: 25px; border-radius: 12px; margin-top: 24px; margin-bottom: 24px; border: 1px solid rgba(243, 156, 18, 0.2); }
         .flag-box label { color: #f39c12; font-weight: 600; font-size: 15px; margin-bottom: 0; display: flex; align-items: flex-start; gap: 12px; cursor: pointer; text-transform: none; line-height: 1.4; }
         .flag-box input[type="checkbox"] { width: 20px; height: 20px; accent-color: #f39c12; flex-shrink: 0; margin-top: 0px; }
 
@@ -156,7 +156,7 @@
             background: linear-gradient(135deg, var(--primary) 0%, #6025d4 100%); 
             color: #ffffff; border: none; padding: 18px 24px; font-size: 16px; font-weight: 600; letter-spacing: 0.5px;
             border-radius: 10px; cursor: pointer; width: 100%; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
             box-shadow: 0 4px 15px var(--primary-glow);
         }
         button.action-btn:hover { background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%); transform: translateY(-2px); box-shadow: 0 8px 25px var(--primary-glow); }
@@ -200,29 +200,31 @@
         
         .chart-container { position: relative; height: 380px; width: 100%; margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.01); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.05); }
 
-        /* --- THE MOBILE FIX --- */
+        /* --- THE MOBILE COMPRESSION FIX --- */
         @media (max-width: 900px) {
             .sidebar { position: fixed; height: 100%; left: -280px; background: rgba(18, 18, 18, 0.95); }
             .sidebar.open { left: 0; box-shadow: 30px 0 60px rgba(0,0,0,0.9); }
             .menu-toggle { display: block; }
             .admin-grid { grid-template-columns: 1fr; }
             
-            /* Tighter header padding */
+            /* Smashed padding to maximize mobile real estate */
             .top-header { padding: 15px 20px; }
-            
-            /* Tighter container padding to maximize screen space */
             .content-container { padding: 15px 15px 80px 15px; }
+            .app-card { padding: 20px 15px; border-radius: 12px; }
             
-            /* Tighter card padding */
-            .app-card { padding: 20px 15px; }
-            .issue-block, .return-block, .flag-box { padding: 20px 15px; }
+            /* Compress inputs to save vertical height */
+            input, select, textarea { padding: 12px; font-size: 14px; }
+            
+            /* Stack the new desktop grid */
+            .form-grid-2 { grid-template-columns: 1fr; gap: 15px; }
+            .issue-block, .return-block, .flag-box { padding: 20px 15px; margin-bottom: 0px; }
 
-            .tx-type-group { flex-direction: column; gap: 8px; }
+            .tx-type-group { flex-direction: column; gap: 8px; margin-bottom: 20px; }
             #toast-container { left: 20px; right: 20px; bottom: 20px; align-items: center; }
             .toast { width: 100%; justify-content: center; }
             .chart-container { height: 300px; padding: 10px; }
 
-            /* Mobile Card Tables */
+            /* Mobile Card Tables Configuration */
             table, thead, tbody, th, td, tr { display: block; width: 100%; }
             thead tr { display: none; } 
             
@@ -246,15 +248,15 @@
             }
             
             /* Log Table Vertical Flow */
-            #logsTableBody td:nth-child(2) { font-size: 20px; margin-bottom: 6px; order: 1; } /* Tech Name */
-            #logsTableBody td:nth-child(3) { order: 2; margin-bottom: 15px; font-size: 16px; } /* Action Taken */
-            #logsTableBody td:nth-child(4) { order: 3; background: rgba(0,0,0,0.5) !important; padding: 15px !important; border-radius: 8px; margin-bottom: 15px; font-size: 14px; color: #ccc !important; } /* Notes Box */
-            #logsTableBody td:nth-child(1) { order: 4; text-align: right; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px !important; font-size: 12px; color: #8b949e !important; } /* Timestamp Footer */
+            #logsTableBody td:nth-child(2) { font-size: 20px; margin-bottom: 6px; order: 1; } 
+            #logsTableBody td:nth-child(3) { order: 2; margin-bottom: 15px; font-size: 16px; } 
+            #logsTableBody td:nth-child(4) { order: 3; background: rgba(0,0,0,0.5) !important; padding: 15px !important; border-radius: 8px; margin-bottom: 15px; font-size: 14px; color: #ccc !important; } 
+            #logsTableBody td:nth-child(1) { order: 4; text-align: right; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px !important; font-size: 12px; color: #8b949e !important; } 
 
             /* Inventory Table Vertical Flow */
-            #inventoryTableBody td:nth-child(1) { padding-right: 50px !important; margin-bottom: 15px; font-size: 18px; } /* Item Name & Bar */
-            #inventoryTableBody td:nth-child(2) { display: inline-block; width: max-content; } /* Badge */
-            #inventoryTableBody td:nth-child(3) { position: absolute; top: 20px; right: 20px; font-size: 26px !important; } /* Big Qty in Top Right Corner */
+            #inventoryTableBody td:nth-child(1) { padding-right: 50px !important; margin-bottom: 15px; font-size: 18px; } 
+            #inventoryTableBody td:nth-child(2) { display: inline-block; width: max-content; } 
+            #inventoryTableBody td:nth-child(3) { position: absolute; top: 20px; right: 20px; font-size: 26px !important; } 
         }
 
         #imgPreviewBox { position: fixed; display: none; z-index: 1000; background: rgba(18, 18, 18, 0.85); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.7); pointer-events: none; width: 260px; }
@@ -326,39 +328,39 @@
                             <select id="techSelect" required><option value="">Loading roster...</option></select>
                         </div>
 
-                        <div id="issueBlock" class="issue-block dynamic-section">
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label style="color:var(--primary);">Issuing Hardware Out</label>
-                                <select id="equipSelect" onchange="checkIssueTier()"><option value="">Loading hardware...</option></select>
-                            </div>
-                            <div id="issueSerialWrap" class="serial-field-wrap">
-                                <label style="color:var(--primary); font-weight:700;">Scan OUT: New Serial Number</label>
-                                <div class="input-wrap">
-                                    <input type="text" id="issueSerialInput" placeholder="e.g. SPLICER-NEW-99823">
-                                    <button type="button" class="cam-btn" onclick="startScanner('issueSerialInput')" title="Scan Barcode">📷</button>
+                        <div class="form-grid-2">
+                            <div id="issueBlock" class="issue-block dynamic-section">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="color:var(--primary);">Issuing Hardware Out</label>
+                                    <select id="equipSelect" onchange="checkIssueTier()"><option value="">Loading hardware...</option></select>
+                                </div>
+                                <div id="issueSerialWrap" class="serial-field-wrap">
+                                    <label style="color:var(--primary); font-weight:700;">Scan OUT: New Serial Number</label>
+                                    <div class="input-wrap">
+                                        <input type="text" id="issueSerialInput" placeholder="e.g. SPLICER-NEW-99823">
+                                        <button type="button" class="cam-btn" onclick="startScanner('issueSerialInput')" title="Scan Barcode">📷</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div id="returnBlock" class="return-block dynamic-section">
-                            <div class="form-group" style="margin-bottom:0;">
-                                <label id="returnLabel" style="color:var(--accent);">Returning Hardware In (Optional)</label>
-                                <select id="returnEquipSelect" onchange="checkReturnTier()"><option value="">Loading hardware...</option></select>
-                            </div>
-                            <div id="returnSerialWrap" class="serial-field-wrap">
-                                <label id="returnSerialLabel" style="color:var(--accent); font-weight:700;">Scan IN: Old Serial Number</label>
-                                <div class="input-wrap">
-                                    <input type="text" id="returnSerialInput" placeholder="e.g. SPLICER-OLD-11234">
-                                    <button type="button" class="cam-btn" style="color:var(--accent); border-color: rgba(0, 223, 115, 0.3); background: rgba(0, 223, 115, 0.1);" onclick="startScanner('returnSerialInput')" title="Scan Barcode">📷</button>
+                            <div id="returnBlock" class="return-block dynamic-section">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label id="returnLabel" style="color:var(--accent);">Returning Hardware In (Optional)</label>
+                                    <select id="returnEquipSelect" onchange="checkReturnTier()"><option value="">Loading hardware...</option></select>
                                 </div>
+                                <div id="returnSerialWrap" class="serial-field-wrap">
+                                    <label id="returnSerialLabel" style="color:var(--accent); font-weight:700;">Scan IN: Old Serial Number</label>
+                                    <div class="input-wrap">
+                                        <input type="text" id="returnSerialInput" placeholder="e.g. SPLICER-OLD-11234">
+                                        <button type="button" class="cam-btn" style="color:var(--accent); border-color: rgba(0, 223, 115, 0.3); background: rgba(0, 223, 115, 0.1);" onclick="startScanner('returnSerialInput')" title="Scan Barcode">📷</button>
+                                    </div>
+                                </div>
+                                <label id="brokenCheckWrap" class="checkbox-label">
+                                    <input type="checkbox" id="brokenCheck">
+                                    <span><strong>MARK AS BROKEN / RMA:</strong> Do not add this old unit back into Active Stock.</span>
+                                </label>
                             </div>
-                            <label id="brokenCheckWrap" class="checkbox-label">
-                                <input type="checkbox" id="brokenCheck">
-                                <span><strong>MARK AS BROKEN / RMA:</strong> Do not add this old unit back into Active Stock.</span>
-                            </label>
-                        </div>
-
-                        <div class="flag-box">
+                        </div> <div class="flag-box">
                             <label>
                                 <input type="checkbox" id="flagSupCheck" onchange="document.getElementById('supMessageWrap').style.display = this.checked ? 'block' : 'none';">
                                 🚩 Flag Mentors & Supervisors for Review
@@ -658,7 +660,8 @@
                     document.body.insertAdjacentHTML('beforeend', '<style id="spinnerAnim">@keyframes spin { 100% { transform: rotate(360deg); } }</style>');
                 }
 
-                fetch(WEB_APP_URL + "?action=getData")
+                // Append cache buster to force fresh data load
+                fetch(WEB_APP_URL + "?action=getData&t=" + new Date().getTime())
                 .then(res => res.json())
                 .then(data => {
                     localTechs = data.techs || [];
@@ -703,7 +706,6 @@
                 adjustSelect.innerHTML += optionHtml;
             });
 
-            // UPDATED: Alert box logic (Now displays inside Admin Tab only if stock is low)
             let lowStockItems = localInventory.filter(item => item.qty <= 1);
             let alertBox = document.getElementById('lowStockAlert');
             let alertText = document.getElementById('lowStockItemsText');
@@ -712,7 +714,7 @@
             if(lowStockItems.length > 0) {
                 let names = lowStockItems.map(i => `${i.name} (${i.qty} left)`).join(' • ');
                 alertText.innerText = names;
-                alertBox.style.display = 'flex';
+                alertBox.style.display = isAdminActive ? 'flex' : 'none';
             } else {
                 alertBox.style.display = 'none';
             }
