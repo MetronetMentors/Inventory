@@ -280,7 +280,7 @@
     <div id="loginOverlay">
         <div class="login-box">
             <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-login">
-            <h2 style="font-weight:700; margin-bottom:8px; color: #fff;">Network Access</h2>
+            <h2 style="font-weight:700; margin-bottom:8px; color: #fff;">Login</h2>
             <p style="color:var(--text-muted); margin-bottom:35px; font-size: 14px; letter-spacing: 0.5px;">Secure connection to Field Operations.</p>
             <input type="password" id="sysPassword" placeholder="Authentication Key" onkeydown="if(event.key === 'Enter') attemptLogin()" style="text-align: center; letter-spacing: 2px;">
             <button class="action-btn" onclick="attemptLogin()" id="loginBtnText">Authenticate Connection</button>
@@ -292,10 +292,10 @@
         <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-nav">
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; font-weight:700;">Operations Center</p>
-        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Field Transactions</button>
+        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Gear Transactions</button>
         <button class="nav-btn" onclick="switchTab('inventoryTab')">📊 Live Stock Count</button>
-        <button class="nav-btn" onclick="switchTab('logsTab')">📝 Audit Trail</button>
-        <button class="nav-btn" onclick="switchTab('analyticsTab')">📈 Analytics & Trends</button>
+        <button class="nav-btn" onclick="switchTab('logsTab')">📝 Logs</button>
+        <button class="nav-btn" onclick="switchTab('analyticsTab')">📈 Analytics</button>
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-top:35px; margin-bottom:12px; font-weight:700;">System Admin</p>
         <button class="nav-btn" onclick="requireAdminPassword()">⚙️ Settings & Catalog</button>
@@ -306,7 +306,7 @@
             <div style="display:flex; align-items:center; gap:20px;">
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
                 <div class="header-titles">
-                    <h1>Field Gear Allocation</h1>
+                    <h1>Gear Allocation</h1>
                     <p>Live Inventory Tracking Engine</p>
                 </div>
             </div>
@@ -357,7 +357,7 @@
                                 </div>
                                 <label id="brokenCheckWrap" class="checkbox-label">
                                     <input type="checkbox" id="brokenCheck">
-                                    <span><strong>MARK AS BROKEN / RMA:</strong> Do not add this old unit back into Active Stock.</span>
+                                    <span><strong>MARK AS BROKEN:</strong> Do not add this back into Active Stock.</span>
                                 </label>
                             </div>
                         </div> <div class="flag-box">
@@ -366,13 +366,13 @@
                                 🚩 Flag for Review
                             </label>
                             <div id="supMessageWrap" style="display:none; margin-top: 20px;">
-                                <textarea id="supMessageInput" rows="2" placeholder="Why are you flagging leadership? (e.g. 'Need approval for 3rd replacement this month')"></textarea>
+                                <textarea id="supMessageInput" rows="2" placeholder="Why are you flagging leadership?"></textarea>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label>Transaction Notes</label>
-                            <textarea id="reasonInput" rows="3" placeholder="Condition notes or reason for lost hardware..." required></textarea>
+                            <label>Notes</label>
+                            <textarea id="reasonInput" rows="3" placeholder="Condition notes..." required></textarea>
                         </div>
                         <button type="submit" class="action-btn" id="submitBtnText">Process Transaction</button>
                     </form>
