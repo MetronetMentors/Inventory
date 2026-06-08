@@ -97,7 +97,9 @@
         .alert-banner { background: rgba(255, 71, 87, 0.08); border: 1px solid rgba(255, 71, 87, 0.2); border-left: 4px solid var(--alert); color: var(--text-main); padding: 16px 20px; margin-bottom: 25px; border-radius: 8px; display: none; align-items: center; gap: 15px; font-weight: 500; box-shadow: 0 10px 25px rgba(255,71,87,0.05); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 100%; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .content-container { padding: 35px 50px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        /* CHANGED: Tighter max-width to fix the wide stretching on desktop */
+        .content-container { padding: 35px 50px; max-width: 1000px; margin: 0 auto; width: 100%; }
+        
         .tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -142,12 +144,13 @@
         .issue-block { background: linear-gradient(145deg, rgba(126, 63, 242, 0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(126, 63, 242, 0.15); padding: 25px; border-radius: 12px; margin-bottom: 24px; }
         .serial-field-wrap { display: none; margin-top: 20px; }
         
-        .checkbox-label { display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 14px; color: var(--alert); text-transform: none; margin-top: 15px; font-weight: 500; }
-        .checkbox-label input { width: 20px; height: 20px; accent-color: var(--alert); cursor: pointer; }
+        /* CHANGED: Fixed Checkbox alignments for mobile wrapping */
+        .checkbox-label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-size: 14px; color: var(--alert); text-transform: none; margin-top: 15px; font-weight: 500; line-height: 1.4; }
+        .checkbox-label input { width: 20px; height: 20px; accent-color: var(--alert); cursor: pointer; flex-shrink: 0; margin-top: 0px; }
 
         .flag-box { background: rgba(243, 156, 18, 0.05); padding: 25px; border-radius: 12px; margin-bottom: 24px; border: 1px solid rgba(243, 156, 18, 0.2); }
-        .flag-box label { color: #f39c12; font-weight: 600; font-size: 15px; margin-bottom: 0; display: flex; align-items: center; gap: 12px; cursor: pointer; text-transform: none; }
-        .flag-box input[type="checkbox"] { width: 20px; height: 20px; accent-color: #f39c12; }
+        .flag-box label { color: #f39c12; font-weight: 600; font-size: 15px; margin-bottom: 0; display: flex; align-items: flex-start; gap: 12px; cursor: pointer; text-transform: none; line-height: 1.4; }
+        .flag-box input[type="checkbox"] { width: 20px; height: 20px; accent-color: #f39c12; flex-shrink: 0; margin-top: 0px; }
 
         button.action-btn { 
             background: linear-gradient(135deg, var(--primary) 0%, #6025d4 100%); 
@@ -203,8 +206,17 @@
             .sidebar.open { left: 0; box-shadow: 30px 0 60px rgba(0,0,0,0.9); }
             .menu-toggle { display: block; }
             .admin-grid { grid-template-columns: 1fr; }
-            .top-header { padding: 15px 25px; }
-            .content-container { padding: 20px 25px 80px 25px; }
+            
+            /* Tighter header padding */
+            .top-header { padding: 15px 20px; }
+            
+            /* Tighter container padding to maximize screen space */
+            .content-container { padding: 15px 15px 80px 15px; }
+            
+            /* Tighter card padding */
+            .app-card { padding: 20px 15px; }
+            .issue-block, .return-block, .flag-box { padding: 20px 15px; }
+
             .tx-type-group { flex-direction: column; gap: 8px; }
             #toast-container { left: 20px; right: 20px; bottom: 20px; align-items: center; }
             .toast { width: 100%; justify-content: center; }
@@ -212,7 +224,7 @@
 
             /* Mobile Card Tables */
             table, thead, tbody, th, td, tr { display: block; width: 100%; }
-            thead tr { display: none; } /* Hides headers completely on mobile */
+            thead tr { display: none; } 
             
             tr {
                 background: rgba(25, 25, 25, 0.9) !important;
@@ -615,6 +627,14 @@
             }
             document.getElementById('sidebar').classList.remove('open');
 
+            let alertBox = document.getElementById('lowStockAlert');
+            let lowStockItems = localInventory.filter(item => item.qty <= 1);
+            if (tabId === 'adminTab' || lowStockItems.length === 0) {
+                alertBox.style.display = 'none';
+            } else {
+                alertBox.style.display = 'flex';
+            }
+
             if (tabId === 'analyticsTab') { renderAnalyticsChart(); }
         }
 
@@ -687,6 +707,7 @@
             let lowStockItems = localInventory.filter(item => item.qty <= 1);
             let alertBox = document.getElementById('lowStockAlert');
             let alertText = document.getElementById('lowStockItemsText');
+            let isAdminActive = document.getElementById('adminTab').classList.contains('active');
             
             if(lowStockItems.length > 0) {
                 let names = lowStockItems.map(i => `${i.name} (${i.qty} left)`).join(' • ');
