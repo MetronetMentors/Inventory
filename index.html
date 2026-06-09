@@ -290,9 +290,9 @@
         <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-nav">
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; font-weight:700;">Operations Center</p>
-        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Gear Transactions</button>
+        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Gear Allocation</button>
         <button class="nav-btn" onclick="switchTab('inventoryTab')">📊 Live Stock Count</button>
-        <button class="nav-btn" onclick="switchTab('logsTab')">📝 Logs</button>
+        <button class="nav-btn" onclick="switchTab('logsTab')">📝 Allocation Logs</button>
         <button class="nav-btn" onclick="switchTab('analyticsTab')">📈 Analytics</button>
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-top:35px; margin-bottom:12px; font-weight:700;">System Admin</p>
@@ -314,7 +314,7 @@
             
             <div id="issueTab" class="tab-content active">
                 <div class="app-card">
-                    <h2>Log Field Transaction</h2>
+                    <h2>Log Gear Allocation</h2>
                     <div class="tx-type-group">
                         <label><input type="radio" name="txType" value="swap" checked onchange="toggleTxMode()"> Issue / Swap Gear</label>
                         <label><input type="radio" name="txType" value="return" onchange="toggleTxMode()"> Report Lost Tool</label>
@@ -377,10 +377,10 @@
 
                             <div class="flag-block dynamic-section">
                                 <div class="form-group" style="margin-bottom: 0;">
-                                    <label style="color: #f39c12;">Flag Mentors & Supervisors</label>
+                                    <label style="color: #f39c12;">Flag for review</label>
                                     <label class="checkbox-label" style="color: #f39c12; margin-top: 15px;">
                                         <input type="checkbox" id="flagSupCheck" onchange="document.getElementById('supMessageWrap').style.display = this.checked ? 'block' : 'none';">
-                                        <span><strong>FLAG FOR REVIEW:</strong> Alert leadership to this transaction.</span>
+                                        <span><strong>Alert leadership to this.</span>
                                     </label>
                                 </div>
                                 <div id="supMessageWrap" style="display:none; margin-top: 15px;">
@@ -390,14 +390,14 @@
 
                             <div class="notes-block dynamic-section">
                                 <div class="form-group" style="margin-bottom: 0; height: 100%; display: flex; flex-direction: column;">
-                                    <label style="color: var(--text-main);">Transaction Notes</label>
+                                    <label style="color: var(--text-main);">Notes</label>
                                     <textarea id="reasonInput" placeholder="Condition notes or reason for lost hardware..." required style="flex: 1; resize: vertical; min-height: 80px;"></textarea>
                                 </div>
                             </div>
 
                         </div> 
 
-                        <button type="submit" class="action-btn" id="submitBtnText">Process Transaction</button>
+                        <button type="submit" class="action-btn" id="submitBtnText">Process Allocation</button>
                     </form>
                 </div>
             </div>
@@ -691,7 +691,7 @@
 
         function requireAdminPassword() {
             const pass = prompt("Enter Supervisor Admin Password:");
-            if (pass === "Super2026") {
+            if (pass === "GunsBros") {
                 switchTab('adminTab');
             } else if (pass !== null) {
                 showToast("Incorrect authorization password.", "error");
