@@ -215,44 +215,31 @@
 
         /* --- NEW UPGRADED PRINT ENGINE --- */
         @media print {
-            /* 1. Unlock the body height so the browser can see multiple pages */
-            body, html { height: auto !important; overflow: visible !important; background: white !important; }
+            @page { size: portrait; margin: 0.5in; }
             
-            /* 2. Hide the entire app so it doesn't take up any physical paper space */
+            body, html { height: auto !important; overflow: visible !important; background: white !important; }
             .sidebar, .main-content, #loginOverlay, #scannerOverlay, #toast-container { display: none !important; }
             
-            /* 3. Pull the report overlay into the standard document flow */
-            #reportOverlay { 
-                position: relative !important; 
-                display: block !important; 
-                background: white !important; 
-                padding: 0 !important; 
-                overflow: visible !important; 
-            }
-            
-            /* 4. Strip the dark mode styling for clean paper */
-            .report-box { 
-                background: white !important; 
-                color: black !important; 
-                box-shadow: none !important; 
-                border: none !important; 
-                padding: 0 !important; 
-                max-width: 100% !important; 
-                margin: 0 !important; 
-            }
-            
+            #reportOverlay { position: relative !important; display: block !important; background: white !important; padding: 0 !important; overflow: visible !important; }
+            .report-box { background: white !important; color: black !important; box-shadow: none !important; border: none !important; padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
             .report-box h2, .report-box h3, .report-box p, .report-box td, .report-box th, .report-box span { color: black !important; border-color: #ccc !important; text-shadow: none !important; }
             .stat-card { background: transparent !important; border: 1px solid #ccc !important; break-inside: avoid; }
             .no-print { display: none !important; }
-            
-            /* 5. Chart scaling and color inversion */
             canvas { max-width: 100% !important; filter: invert(1); max-height: 250px !important; } 
             
-            /* 6. Prevent table rows from cutting in half at the bottom of the page */
-            table { page-break-inside: auto; margin-bottom: 50px; }
-            tr { page-break-inside: avoid; page-break-after: auto; }
-            thead { display: table-header-group; }
-            table td { border-bottom: 1px solid #ddd !important; }
+            /* FORCES A PERFECT PAPER TABLE, IGNORING MOBILE CARDS */
+            table { display: table !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 50px !important; }
+            thead { display: table-header-group !important; }
+            tbody { display: table-row-group !important; }
+            tr { display: table-row !important; background: white !important; padding: 0 !important; margin: 0 !important; border: none !important; box-shadow: none !important; page-break-inside: avoid !important; }
+            th, td { display: table-cell !important; text-align: left !important; padding: 12px 8px !important; border-bottom: 1px solid #ddd !important; }
+            th { border-bottom: 2px solid #000 !important; font-weight: bold !important; }
+            
+            /* Clean Column Widths for Portrait Paper */
+            th:nth-child(1), td:nth-child(1) { width: 15% !important; } /* Date */
+            th:nth-child(2), td:nth-child(2) { width: 20% !important; } /* Tech */
+            th:nth-child(3), td:nth-child(3) { width: 30% !important; } /* Action */
+            th:nth-child(4), td:nth-child(4) { width: 35% !important; } /* Notes */
         }
 
         /* --- MOBILE LAYOUT --- */
@@ -919,10 +906,10 @@
                 itemCounts[cleanItemName] = (itemCounts[cleanItemName] || 0) + 1;
 
                 reportTableHTML += `<tr>
-                    <td style="font-size:12px; color:gray; width: 20%;">${log.date}</td>
-                    <td style="font-weight:bold; width: 20%;">${log.tech}</td>
-                    <td style="width: 30%;">${log.item}</td>
-                    <td style="font-size:12px; width: 30%;">${log.reason}</td>
+                    <td>${log.date}</td>
+                    <td>${log.tech}</td>
+                    <td>${log.item}</td>
+                    <td>${log.reason}</td>
                 </tr>`;
             });
 
