@@ -213,34 +213,26 @@
         .stat-card h3 { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         .stat-card p { font-size: 28px; font-weight: 700; color: #fff; }
 
-        /* --- EXTREME PRINT ENGINE FIX --- */
+        /* --- EXTREME PRINT ENGINE FIX v3 --- */
         @media print {
             @page { margin: 0.5in; size: portrait; } 
             
-            /* 1. Kill the app lock so pages scroll infinitely on paper */
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; display: block !important; background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
-            
-            /* 2. Hide everything except the report */
             .sidebar, .main-content, #loginOverlay, #scannerOverlay, #toast-container, #imgPreviewBox { display: none !important; }
             
-            /* 3. Force the report out of the overlay and onto the normal page flow */
             #reportOverlay { position: static !important; display: block !important; background: white !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; width: 100% !important; }
-            
-            /* 4. Strip dark mode boxes */
             .report-box { background: white !important; color: black !important; box-shadow: none !important; border: none !important; padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
             .report-box h2, .report-box h3, .report-box p, .report-box td, .report-box th, .report-box span { color: black !important; text-shadow: none !important; }
             
-            /* 5. Force 4 columns for stats just like the screen */
             .report-stats { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 15px !important; margin: 20px 0 !important; }
             .stat-card { background: white !important; border: 2px solid #eaeaea !important; break-inside: avoid; box-shadow: none !important; padding: 15px !important; border-radius: 8px !important; }
             .stat-card h3 { color: #555 !important; font-size: 11px !important; }
             .stat-card p { font-size: 24px !important; }
-
             .no-print { display: none !important; }
             
-            /* 6. Fix the Chart squish */
+            /* FIXED ASPECT RATIO FOR PRINTED CHART */
             .chart-container { 
-                height: 350px !important; 
+                height: 250px !important; 
                 width: 100% !important; 
                 page-break-inside: avoid !important; 
                 margin: 30px 0 !important; 
@@ -251,11 +243,13 @@
             }
             canvas { 
                 max-width: 100% !important; 
-                height: 100% !important; 
+                max-height: 250px !important; 
+                width: auto !important; 
+                height: auto !important; 
                 filter: invert(1) hue-rotate(180deg); 
+                object-fit: contain !important; /* Prevents squishing */
             } 
             
-            /* 7. FORCE A PERFECT, UN-SQUISHED TABLE */
             table { display: table !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 50px !important; table-layout: fixed !important; page-break-inside: auto !important; }
             thead { display: table-header-group !important; }
             tbody { display: table-row-group !important; }
@@ -263,7 +257,6 @@
             th, td { display: table-cell !important; text-align: left !important; padding: 10px 5px !important; border-bottom: 1px solid #ddd !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; word-wrap: break-word !important; white-space: normal !important; font-size: 11px !important; }
             th { border-bottom: 2px solid #000 !important; font-weight: bold !important; font-size: 11px !important; }
             
-            /* Clean Column Widths for Portrait Paper */
             th:nth-child(1), td:nth-child(1) { width: 15% !important; } 
             th:nth-child(2), td:nth-child(2) { width: 15% !important; } 
             th:nth-child(3), td:nth-child(3) { width: 25% !important; } 
@@ -345,7 +338,7 @@
                 <div class="stat-card"><h3>Items Lost</h3><p id="repLost" style="color: var(--alert);">0</p></div>
             </div>
 
-            <div class="chart-container">
+            <div class="chart-container" style="height: 250px; margin-bottom: 30px;">
                 <canvas id="reportSpecificChart"></canvas>
             </div>
 
