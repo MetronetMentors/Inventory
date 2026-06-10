@@ -161,6 +161,9 @@
         }
         button.action-btn:hover { background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%); transform: translateY(-2px); box-shadow: 0 8px 25px var(--primary-glow); }
         button.action-btn:active { transform: translateY(1px); box-shadow: 0 2px 10px var(--primary-glow); }
+        
+        button.secondary-btn { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+        button.secondary-btn:hover { background: rgba(255,255,255,0.15); box-shadow: 0 4px 15px rgba(255,255,255,0.1); }
 
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 15px; }
         th { padding: 0 20px 15px; text-align: left; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; border: none; }
@@ -169,17 +172,15 @@
         td:last-child { border-right: 1px solid rgba(255,255,255,0.03); border-radius: 0 12px 12px 0; }
         tr:hover td { background: rgba(255,255,255,0.05); transform: scale(1.005); cursor: pointer; }
 
-        /* TRACKING TIER BADGES */
         .badge { padding: 6px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.8px; }
         .badge.serialized { background: rgba(126, 63, 242, 0.15); color: #c4a1ff; border: 1px solid rgba(126, 63, 242, 0.3); }
         .badge.bulk { background: rgba(164, 176, 190, 0.1); color: var(--text-muted); border: 1px solid rgba(164, 176, 190, 0.2);}
         .badge.clothing { background: rgba(52, 152, 219, 0.15); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3); }
-        /* NEW LADDERS BADGE */
         .badge.ladders { background: rgba(243, 156, 18, 0.15); color: #f39c12; border: 1px solid rgba(243, 156, 18, 0.3); }
 
         .search-bar { 
             width: 100%; padding: 16px 16px 16px 50px; border: 1px solid var(--border); border-radius: 12px; 
-            font-size: 15px; margin-bottom: 15px; 
+            font-size: 15px; margin-bottom: 0; /* Reset for flex row */
             background: var(--bg-surface) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%238b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 18px center; 
             color: var(--text-main); transition: all 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -204,6 +205,27 @@
         
         .chart-container { position: relative; height: 380px; width: 100%; margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.01); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.05); }
 
+        /* REPORT OVERLAY STYLING */
+        #reportOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 2000; overflow-y: auto; padding: 40px 20px; display: none; }
+        .report-box { background: var(--bg-surface); padding: 40px; border-radius: 16px; max-width: 1000px; margin: 0 auto; position: relative; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+        .report-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0; }
+        .stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; text-align: center; }
+        .stat-card h3 { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .stat-card p { font-size: 28px; font-weight: 700; color: #fff; }
+
+        /* PRINT CSS - Makes the report look perfect on paper */
+        @media print {
+            body * { visibility: hidden; }
+            #reportOverlay, #reportOverlay * { visibility: visible; }
+            #reportOverlay { position: absolute; left: 0; top: 0; width: 100%; padding: 0; background: white !important; }
+            .report-box { background: white !important; color: black !important; box-shadow: none; border: none; padding: 0; max-width: none; margin: 0; }
+            .report-box h2, .report-box h3, .report-box p, .report-box td, .report-box th, .report-box span { color: black !important; border-color: #ccc !important; text-shadow: none !important; }
+            .stat-card { background: transparent !important; border: 1px solid #ccc !important; }
+            .no-print { display: none !important; }
+            canvas { max-width: 100% !important; filter: invert(1); } /* Inverts dark mode chart to look good on white paper */
+            table td { border-bottom: 1px solid #ddd !important; }
+        }
+
         /* --- MOBILE LAYOUT --- */
         @media (max-width: 900px) {
             .sidebar { position: fixed; height: 100%; left: -280px; background: rgba(18, 18, 18, 0.95); }
@@ -219,6 +241,7 @@
             
             .form-grid-2 { grid-template-columns: 1fr; gap: 15px; }
             .issue-block, .return-block, .flag-block, .notes-block { padding: 20px 15px; margin-bottom: 0px; }
+            .report-stats { grid-template-columns: 1fr 1fr; } /* 2x2 grid for stats on mobile */
 
             .tx-type-group { flex-direction: column; gap: 8px; margin-bottom: 20px; }
             #toast-container { left: 20px; right: 20px; bottom: 20px; align-items: center; }
@@ -240,12 +263,7 @@
                 box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             }
             
-            td {
-                border: none !important;
-                padding: 0 !important;
-                text-align: left;
-                background: transparent !important;
-            }
+            td { border: none !important; padding: 0 !important; text-align: left; background: transparent !important; }
             
             #logsTableBody td:nth-child(2) { font-size: 20px; margin-bottom: 6px; order: 1; } 
             #logsTableBody td:nth-child(3) { order: 2; margin-bottom: 15px; font-size: 16px; } 
@@ -266,6 +284,35 @@
     <div id="toast-container"></div>
     <div id="imgPreviewBox"><img id="previewImgEl" src="" alt="Hardware Preview"></div>
 
+    <div id="reportOverlay">
+        <div class="report-box">
+            <div class="no-print" style="position: absolute; top: 30px; right: 30px; display: flex; gap: 10px;">
+                <button onclick="window.print()" class="action-btn" style="margin: 0; padding: 10px 20px; font-size: 14px; width: auto;">🖨️ Print / Save PDF</button>
+                <button onclick="closeReport()" class="action-btn secondary-btn" style="margin: 0; padding: 10px 20px; font-size: 14px; width: auto;">❌ Close</button>
+            </div>
+            
+            <h2 id="reportTitle" style="font-size: 28px; font-weight: 700; margin-bottom: 5px;">Allocation Audit Report</h2>
+            <p id="reportDate" style="color: var(--text-muted); font-size: 14px;"></p>
+            
+            <div class="report-stats">
+                <div class="stat-card"><h3>Total Records</h3><p id="repTotal">0</p></div>
+                <div class="stat-card"><h3>Items Issued</h3><p id="repIssued" style="color: var(--primary);">0</p></div>
+                <div class="stat-card"><h3>Items Swapped</h3><p id="repSwapped" style="color: #f39c12;">0</p></div>
+                <div class="stat-card"><h3>Items Lost</h3><p id="repLost" style="color: var(--alert);">0</p></div>
+            </div>
+
+            <div class="chart-container" style="height: 250px; margin-bottom: 30px;">
+                <canvas id="reportSpecificChart"></canvas>
+            </div>
+
+            <h3 style="margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Detailed Transaction Ledger</h3>
+            <table style="margin-top: 0;">
+                <thead><tr><th>Date</th><th>Tech</th><th>Action</th><th>Details</th></tr></thead>
+                <tbody id="reportTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
     <div id="scannerOverlay" style="display:none;">
         <div class="scanner-box">
             <h3 style="margin-bottom: 15px; color: #fff;">Scan Asset Barcode</h3>
@@ -278,7 +325,7 @@
     <div id="loginOverlay">
         <div class="login-box">
             <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-login">
-            <h2 style="font-weight:700; margin-bottom:8px; color: #fff;">Login</h2>
+            <h2 style="font-weight:700; margin-bottom:8px; color: #fff;">Network Access</h2>
             <p style="color:var(--text-muted); margin-bottom:35px; font-size: 14px; letter-spacing: 0.5px;">Secure connection to Field Operations.</p>
             <input type="password" id="sysPassword" placeholder="Authentication Key" onkeydown="if(event.key === 'Enter') attemptLogin()" style="text-align: center; letter-spacing: 2px;">
             <button class="action-btn" onclick="attemptLogin()" id="loginBtnText">Authenticate Connection</button>
@@ -290,9 +337,9 @@
         <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-nav">
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; font-weight:700;">Operations Center</p>
-        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Gear Allocation</button>
+        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Gear Transactions</button>
         <button class="nav-btn" onclick="switchTab('inventoryTab')">📊 Live Stock Count</button>
-        <button class="nav-btn" onclick="switchTab('logsTab')">📝 Allocation Logs</button>
+        <button class="nav-btn" onclick="switchTab('logsTab')">📝 Logs & Reports</button>
         <button class="nav-btn" onclick="switchTab('analyticsTab')">📈 Analytics</button>
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-top:35px; margin-bottom:12px; font-weight:700;">System Admin</p>
@@ -314,21 +361,19 @@
             
             <div id="issueTab" class="tab-content active">
                 <div class="app-card">
-                    <h2>Log Gear Allocation</h2>
+                    <h2>Log Field Transaction</h2>
                     <div class="tx-type-group">
                         <label><input type="radio" name="txType" value="swap" checked onchange="toggleTxMode()"> Issue / Swap Gear</label>
                         <label><input type="radio" name="txType" value="return" onchange="toggleTxMode()"> Report Lost Tool</label>
                     </div>
 
                     <form id="issueForm">
-                        
                         <div class="form-group">
                             <label>Field Technician</label>
                             <select id="techSelect" required><option value="">Loading roster...</option></select>
                         </div>
 
                         <div class="form-grid-2">
-                            
                             <div id="issueBlock" class="issue-block dynamic-section">
                                 <label style="color:var(--primary); margin-bottom: 12px; font-weight: 700; font-size: 13px;">1. Select Category & Asset</label>
                                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
@@ -377,10 +422,10 @@
 
                             <div class="flag-block dynamic-section">
                                 <div class="form-group" style="margin-bottom: 0;">
-                                    <label style="color: #f39c12;">Flag for review</label>
+                                    <label style="color: #f39c12;">Flag Mentors & Supervisors</label>
                                     <label class="checkbox-label" style="color: #f39c12; margin-top: 15px;">
                                         <input type="checkbox" id="flagSupCheck" onchange="document.getElementById('supMessageWrap').style.display = this.checked ? 'block' : 'none';">
-                                        <span><strong>Alert leadership to this.</span>
+                                        <span><strong>FLAG FOR REVIEW:</strong> Alert leadership to this transaction.</span>
                                     </label>
                                 </div>
                                 <div id="supMessageWrap" style="display:none; margin-top: 15px;">
@@ -390,20 +435,19 @@
 
                             <div class="notes-block dynamic-section">
                                 <div class="form-group" style="margin-bottom: 0; height: 100%; display: flex; flex-direction: column;">
-                                    <label style="color: var(--text-main);">Notes</label>
+                                    <label style="color: var(--text-main);">Transaction Notes</label>
                                     <textarea id="reasonInput" placeholder="Condition notes or reason for lost hardware..." required style="flex: 1; resize: vertical; min-height: 80px;"></textarea>
                                 </div>
                             </div>
-
                         </div> 
 
-                        <button type="submit" class="action-btn" id="submitBtnText">Process Allocation</button>
+                        <button type="submit" class="action-btn" id="submitBtnText">Process Transaction</button>
                     </form>
                 </div>
             </div>
 
             <div id="inventoryTab" class="tab-content">
-                <input type="text" id="inventorySearchInput" class="search-bar" placeholder="Search Hardware Catalog..." oninput="renderInventoryTable()">
+                <input type="text" id="inventorySearchInput" class="search-bar" placeholder="Search Hardware Catalog..." oninput="renderInventoryTable()" style="margin-bottom: 15px;">
                 <table>
                     <thead><tr><th>Hardware Model</th><th>Tracking Tier</th><th>Available Units</th></tr></thead>
                     <tbody id="inventoryTableBody"><tr><td colspan="3">Loading catalog...</td></tr></tbody>
@@ -411,7 +455,10 @@
             </div>
 
             <div id="logsTab" class="tab-content">
-                <input type="text" id="logSearchInput" class="search-bar" placeholder="Filter by Tech, Date, or Item..." oninput="renderLogsTable()">
+                <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <input type="text" id="logSearchInput" class="search-bar" placeholder="Search by Tech Name, Item, or Date..." oninput="renderLogsTable()" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+                    <button class="action-btn secondary-btn" onclick="generateReport()" style="margin-top: 0; width: auto; white-space: nowrap; padding: 0 24px;">📄 Generate Report</button>
+                </div>
                 <table>
                     <thead><tr><th>Timestamp</th><th>Technician</th><th>Transaction Record</th><th>Notes</th></tr></thead>
                     <tbody id="logsTableBody"><tr><td colspan="4">Loading records...</td></tr></tbody>
@@ -497,7 +544,9 @@
         let localTechs = [];
         let localInventory = [];
         let localLogs = [];
+        let currentFilteredLogs = []; // Keeps track of what is currently on screen for the report
         let checkoutChartInstance = null; 
+        let reportChartInstance = null; // New chart for the report modal
         let html5QrCode;
         let activeScanInput = '';
 
@@ -569,14 +618,10 @@
             let filterValue = filterElement ? filterElement.value : "All";
             let filteredInv = localInventory;
             
-            if (filterValue !== "All") {
-                filteredInv = localInventory.filter(item => item.trackType === filterValue);
-            }
-            
+            if (filterValue !== "All") { filteredInv = localInventory.filter(item => item.trackType === filterValue); }
             filteredInv.sort((a, b) => a.name.localeCompare(b.name));
 
             targetSelect.innerHTML = type === 'issue' ? '<option value="" disabled selected>-- Select Hardware --</option>' : '<option value="">-- None (No Return) --</option>';
-            
             filteredInv.forEach(item => {
                 let safeName = item.name.replace(/"/g, "&quot;");
                 targetSelect.innerHTML += `<option value="${safeName}">${item.name}</option>`;
@@ -637,12 +682,8 @@
 
         function stopScanner() {
             if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().then(() => {
-                    document.getElementById('scannerOverlay').style.display = 'none';
-                }).catch((err) => { document.getElementById('scannerOverlay').style.display = 'none'; });
-            } else {
-                document.getElementById('scannerOverlay').style.display = 'none';
-            }
+                html5QrCode.stop().then(() => { document.getElementById('scannerOverlay').style.display = 'none'; });
+            } else { document.getElementById('scannerOverlay').style.display = 'none'; }
         }
 
         const previewBox = document.getElementById('imgPreviewBox');
@@ -654,19 +695,13 @@
             const ev = e.touches ? e.touches[0] : e;
             previewImg.src = item.img;
             previewBox.style.display = 'block';
-            let x = ev.clientX + 20;
-            let y = ev.clientY + 20;
+            let x = ev.clientX + 20; let y = ev.clientY + 20;
             if (x + 280 > window.innerWidth) x = ev.clientX - 280;
             if (y + 280 > window.innerHeight) y = ev.clientY - 280;
-            previewBox.style.left = x + 'px';
-            previewBox.style.top = y + 'px';
+            previewBox.style.left = x + 'px'; previewBox.style.top = y + 'px';
         }
 
-        function hidePreview() {
-            previewBox.style.display = 'none';
-            previewImg.src = '';
-        }
-
+        function hidePreview() { previewBox.style.display = 'none'; previewImg.src = ''; }
         document.addEventListener('touchstart', function(e) { if (!e.target.closest('tr')) hidePreview(); });
 
         function switchTab(tabId) {
@@ -680,22 +715,16 @@
 
             let alertBox = document.getElementById('lowStockAlert');
             let lowStockItems = localInventory.filter(item => item.qty <= 1);
-            if (tabId === 'adminTab' || lowStockItems.length === 0) {
-                alertBox.style.display = 'none';
-            } else {
-                alertBox.style.display = 'flex';
-            }
+            if (tabId === 'adminTab' || lowStockItems.length === 0) { alertBox.style.display = 'none'; } 
+            else { alertBox.style.display = 'flex'; }
 
             if (tabId === 'analyticsTab') { renderAnalyticsChart(); }
         }
 
         function requireAdminPassword() {
             const pass = prompt("Enter Supervisor Admin Password:");
-            if (pass === "GunsBros") {
-                switchTab('adminTab');
-            } else if (pass !== null) {
-                showToast("Incorrect authorization password.", "error");
-            }
+            if (pass === "Super2026") { switchTab('adminTab'); } 
+            else if (pass !== null) { showToast("Incorrect authorization password.", "error"); }
         }
 
         function attemptLogin() {
@@ -705,9 +734,7 @@
                 loginBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 2s linear infinite;"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg> Authenticating...`;
                 loginBtn.disabled = true;
                 
-                if(!document.getElementById('spinnerAnim')) {
-                    document.body.insertAdjacentHTML('beforeend', '<style id="spinnerAnim">@keyframes spin { 100% { transform: rotate(360deg); } }</style>');
-                }
+                if(!document.getElementById('spinnerAnim')) { document.body.insertAdjacentHTML('beforeend', '<style id="spinnerAnim">@keyframes spin { 100% { transform: rotate(360deg); } }</style>'); }
 
                 fetch(WEB_APP_URL + "?action=getData&t=" + new Date().getTime())
                 .then(res => res.json())
@@ -715,6 +742,7 @@
                     localTechs = data.techs || [];
                     localInventory = data.inventory || [];
                     localLogs = data.logs || [];
+                    currentFilteredLogs = localLogs.slice().reverse(); // Initialize
                     document.getElementById('loginOverlay').style.opacity = '0';
                     setTimeout(() => document.getElementById('loginOverlay').style.display = 'none', 300);
                     renderInterface();
@@ -725,9 +753,7 @@
                     loginBtn.innerText = "Authenticate Connection";
                     loginBtn.disabled = false;
                 });
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
+            } else { document.getElementById('loginError').style.display = 'block'; }
         }
 
         function renderInterface() {
@@ -743,12 +769,10 @@
                 if(removeTechSelect) removeTechSelect.innerHTML += optionHTML;
             });
 
-            updateDropdown('issue');
-            updateDropdown('return');
+            updateDropdown('issue'); updateDropdown('return');
 
             let adjustSelect = document.getElementById('adjustItemSelect');
             adjustSelect.innerHTML = '<option value="" disabled selected>-- Select Asset --</option>';
-            
             let sortedInv = [...localInventory].sort((a,b) => a.name.localeCompare(b.name));
             sortedInv.forEach(item => {
                 let safeName = item.name.replace(/"/g, "&quot;");
@@ -764,13 +788,10 @@
                 let names = lowStockItems.map(i => `${i.name} (${i.qty} left)`).join(' • ');
                 alertText.innerText = names;
                 alertBox.style.display = isAdminActive ? 'flex' : 'none';
-            } else {
-                alertBox.style.display = 'none';
-            }
+            } else { alertBox.style.display = 'none'; }
 
             renderInventoryTable();
             renderLogsTable();
-            renderAnalyticsChart();
         }
 
         function renderInventoryTable() {
@@ -790,8 +811,6 @@
             filteredInventory.forEach(item => {
                 let safeName = item.name.replace(/'/g, "\\'");
                 let qtyColor = item.qty <= 1 ? 'var(--alert)' : 'var(--accent)';
-                
-                // NEW BADGE LOGIC
                 let badgeClass = "bulk";
                 if(item.trackType === "Serialized") badgeClass = "serialized";
                 else if(item.trackType === "Clothing") badgeClass = "clothing";
@@ -819,7 +838,8 @@
             let searchInput = document.getElementById('logSearchInput');
             let searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
 
-            let filteredLogs = localLogs.slice().reverse().filter(log => {
+            // Update the global filtered array so the Report Generator knows what to pull
+            currentFilteredLogs = localLogs.slice().reverse().filter(log => {
                 if (log.tech === "SYSTEM") return false; 
                 return (log.date && log.date.toString().toLowerCase().includes(searchTerm)) || 
                        (log.tech && log.tech.toLowerCase().includes(searchTerm)) || 
@@ -827,12 +847,12 @@
                        (log.reason && log.reason.toLowerCase().includes(searchTerm));
             });
 
-            if(filteredLogs.length === 0) {
+            if(currentFilteredLogs.length === 0) {
                 logTable.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:40px; font-weight: 500;">No matching historical records found.</td></tr>';
                 return;
             }
 
-            filteredLogs.forEach(log => {
+            currentFilteredLogs.forEach(log => {
                 let actionColor = "var(--text-main)";
                 if(log.item.includes("Issued:") || log.item.includes("Replaced:")) actionColor = "#c4a1ff";
                 if(log.item.includes("Lost:")) actionColor = "var(--alert)";
@@ -847,37 +867,100 @@
             });
         }
 
+        // --- NEW REPORT ENGINE ---
+        function generateReport() {
+            if(currentFilteredLogs.length === 0) {
+                return showToast("No records found to generate a report.", "error");
+            }
+
+            let searchTerm = document.getElementById('logSearchInput').value.trim();
+            document.getElementById('reportTitle').innerText = searchTerm ? `Audit Report: "${searchTerm}"` : "Master Audit Report";
+            document.getElementById('reportDate').innerText = "Generated: " + new Date().toLocaleString();
+
+            let issued = 0, swapped = 0, lost = 0;
+            let itemCounts = {};
+
+            let reportTableHTML = "";
+
+            currentFilteredLogs.forEach(log => {
+                if(log.item.includes("Issued:")) issued++;
+                if(log.item.includes("Swap:")) swapped++;
+                if(log.item.includes("Lost:")) lost++;
+
+                let cleanItemName = log.item.split(":")[1] || log.item;
+                if(cleanItemName.includes("➔")) cleanItemName = cleanItemName.split("➔")[1]; // Get the new item in a swap
+                cleanItemName = cleanItemName.trim();
+                itemCounts[cleanItemName] = (itemCounts[cleanItemName] || 0) + 1;
+
+                reportTableHTML += `<tr>
+                    <td style="font-size:12px; color:gray;">${log.date}</td>
+                    <td style="font-weight:bold;">${log.tech}</td>
+                    <td>${log.item}</td>
+                    <td style="font-size:12px;">${log.reason}</td>
+                </tr>`;
+            });
+
+            document.getElementById('repTotal').innerText = currentFilteredLogs.length;
+            document.getElementById('repIssued').innerText = issued;
+            document.getElementById('repSwapped').innerText = swapped;
+            document.getElementById('repLost').innerText = lost;
+            document.getElementById('reportTableBody').innerHTML = reportTableHTML;
+
+            // Render Report Chart
+            let sortedItems = Object.keys(itemCounts).sort((a,b) => itemCounts[b] - itemCounts[a]).slice(0, 8);
+            let chartData = sortedItems.map(item => itemCounts[item]);
+
+            const canvas = document.getElementById('reportSpecificChart');
+            const ctx = canvas.getContext('2d');
+            if (reportChartInstance) { reportChartInstance.destroy(); }
+
+            Chart.defaults.color = '#8b949e';
+            reportChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: sortedItems,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: ['#7E3FF2', '#00df73', '#f39c12', '#ff4757', '#3498db', '#9b59b6', '#e67e22', '#1abc9c'],
+                        borderWidth: 2,
+                        borderColor: '#1a1a1a'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#fcfcfc', font: {family: 'Inter'} } }
+                    }
+                }
+            });
+
+            document.getElementById('reportOverlay').style.display = 'block';
+        }
+
+        function closeReport() {
+            document.getElementById('reportOverlay').style.display = 'none';
+        }
+
         function renderAnalyticsChart() {
             const canvas = document.getElementById('checkoutChart');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
             let checkoutCounts = {};
-            
             localLogs.forEach(log => {
                 if(log.tech === "SYSTEM") return;
-                
                 let pulledItem = "";
-                if (log.item.startsWith("Issued:")) {
-                    pulledItem = log.item.split("Issued:")[1].trim();
-                } else if (log.item.startsWith("Swap:") && log.item.includes("➔")) {
-                    pulledItem = log.item.split("➔")[1].trim();
-                }
-
-                if (pulledItem) {
-                    checkoutCounts[pulledItem] = (checkoutCounts[pulledItem] || 0) + 1;
-                }
+                if (log.item.startsWith("Issued:")) pulledItem = log.item.split("Issued:")[1].trim();
+                else if (log.item.startsWith("Swap:") && log.item.includes("➔")) pulledItem = log.item.split("➔")[1].trim();
+                if (pulledItem) checkoutCounts[pulledItem] = (checkoutCounts[pulledItem] || 0) + 1;
             });
 
             let sortedItems = Object.keys(checkoutCounts).sort((a,b) => checkoutCounts[b] - checkoutCounts[a]);
             let topLabels = sortedItems.slice(0, 10);
             let topData = topLabels.map(item => checkoutCounts[item]);
 
-            if(topLabels.length === 0) {
-                topLabels = ["No Data Yet"];
-                topData = [0];
-            }
-
+            if(topLabels.length === 0) { topLabels = ["No Data Yet"]; topData = [0]; }
             if (checkoutChartInstance) { checkoutChartInstance.destroy(); }
 
             Chart.defaults.color = '#8b949e';
@@ -906,30 +989,12 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        y: { 
-                            beginAtZero: true, 
-                            ticks: { stepSize: 1, padding: 10 }, 
-                            grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false } 
-                        },
-                        x: { 
-                            ticks: { padding: 10 },
-                            grid: { display: false, drawBorder: false } 
-                        }
+                        y: { beginAtZero: true, ticks: { stepSize: 1, padding: 10 }, grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false } },
+                        x: { ticks: { padding: 10 }, grid: { display: false, drawBorder: false } }
                     },
                     plugins: {
                         legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(18, 18, 18, 0.95)',
-                            titleColor: '#00df73',
-                            bodyColor: '#fff',
-                            titleFont: { size: 14, family: 'Inter', weight: 'bold' },
-                            bodyFont: { size: 13, family: 'Inter' },
-                            padding: 16,
-                            borderColor: 'rgba(255,255,255,0.1)',
-                            borderWidth: 1,
-                            cornerRadius: 8,
-                            displayColors: false
-                        }
+                        tooltip: { backgroundColor: 'rgba(18, 18, 18, 0.95)', titleColor: '#00df73', bodyColor: '#fff', titleFont: { size: 14, family: 'Inter', weight: 'bold' }, bodyFont: { size: 13, family: 'Inter' }, padding: 16, borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, cornerRadius: 8, displayColors: false }
                     }
                 }
             });
