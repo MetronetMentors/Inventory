@@ -213,33 +213,41 @@
         .stat-card h3 { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         .stat-card p { font-size: 28px; font-weight: 700; color: #fff; }
 
-        /* --- NEW UPGRADED PRINT ENGINE --- */
+        /* --- EXTREME PRINT ENGINE FIX --- */
         @media print {
-            @page { size: portrait; margin: 0.5in; }
+            @page { margin: 0.5in; } /* Lets the browser decide orientation, but portrait is fixed now */
             
-            body, html { height: auto !important; overflow: visible !important; background: white !important; }
-            .sidebar, .main-content, #loginOverlay, #scannerOverlay, #toast-container { display: none !important; }
+            /* 1. Kill the app lock so pages scroll infinitely on paper */
+            html, body { height: auto !important; min-height: auto !important; overflow: visible !important; display: block !important; background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
             
-            #reportOverlay { position: relative !important; display: block !important; background: white !important; padding: 0 !important; overflow: visible !important; }
+            /* 2. Hide everything except the report */
+            .sidebar, .main-content, #loginOverlay, #scannerOverlay, #toast-container, #imgPreviewBox { display: none !important; }
+            
+            /* 3. Force the report out of the overlay and onto the normal page flow */
+            #reportOverlay { position: static !important; display: block !important; background: white !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; width: 100% !important; }
+            
+            /* 4. Strip dark mode boxes */
             .report-box { background: white !important; color: black !important; box-shadow: none !important; border: none !important; padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
-            .report-box h2, .report-box h3, .report-box p, .report-box td, .report-box th, .report-box span { color: black !important; border-color: #ccc !important; text-shadow: none !important; }
+            .report-box h2, .report-box h3, .report-box p, .report-box td, .report-box th, .report-box span { color: black !important; text-shadow: none !important; }
             .stat-card { background: transparent !important; border: 1px solid #ccc !important; break-inside: avoid; }
             .no-print { display: none !important; }
-            canvas { max-width: 100% !important; filter: invert(1); max-height: 250px !important; } 
             
-            /* FORCES A PERFECT PAPER TABLE, IGNORING MOBILE CARDS */
-            table { display: table !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 50px !important; }
+            /* 5. Chart scaling and inversion */
+            .chart-container { max-height: 250px !important; page-break-inside: avoid !important; margin-bottom: 20px !important; border: none !important; }
+            canvas { max-width: 100% !important; filter: invert(1) hue-rotate(180deg); } 
+            
+            /* 6. FORCE A PERFECT, UN-SQUISHED TABLE */
+            table { display: table !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 50px !important; table-layout: fixed !important; page-break-inside: auto !important; }
             thead { display: table-header-group !important; }
             tbody { display: table-row-group !important; }
-            tr { display: table-row !important; background: white !important; padding: 0 !important; margin: 0 !important; border: none !important; box-shadow: none !important; page-break-inside: avoid !important; }
-            th, td { display: table-cell !important; text-align: left !important; padding: 12px 8px !important; border-bottom: 1px solid #ddd !important; }
-            th { border-bottom: 2px solid #000 !important; font-weight: bold !important; }
+            tr { display: table-row !important; background: white !important; padding: 0 !important; margin: 0 !important; border: none !important; box-shadow: none !important; page-break-inside: avoid !important; page-break-after: auto !important; }
+            th, td { display: table-cell !important; text-align: left !important; padding: 10px 5px !important; border-bottom: 1px solid #ddd !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; word-wrap: break-word !important; white-space: normal !important; font-size: 11px !important; }
+            th { border-bottom: 2px solid #000 !important; font-weight: bold !important; font-size: 11px !important; }
             
-            /* Clean Column Widths for Portrait Paper */
             th:nth-child(1), td:nth-child(1) { width: 15% !important; } /* Date */
-            th:nth-child(2), td:nth-child(2) { width: 20% !important; } /* Tech */
-            th:nth-child(3), td:nth-child(3) { width: 30% !important; } /* Action */
-            th:nth-child(4), td:nth-child(4) { width: 35% !important; } /* Notes */
+            th:nth-child(2), td:nth-child(2) { width: 15% !important; } /* Tech */
+            th:nth-child(3), td:nth-child(3) { width: 25% !important; } /* Action */
+            th:nth-child(4), td:nth-child(4) { width: 45% !important; } /* Details */
         }
 
         /* --- MOBILE LAYOUT --- */
@@ -873,8 +881,17 @@
                 if(log.item.includes("Lost:")) actionColor = "var(--alert)";
                 if(log.item.includes("Swap:")) actionColor = "#f39c12";
 
+                // Clean up the ugly ISO date formatting for the display table
+                let displayDate = log.date;
+                try {
+                    let d = new Date(log.date);
+                    if(!isNaN(d.getTime())) {
+                        displayDate = d.toLocaleDateString() + " " + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    }
+                } catch(e) {}
+
                 logTable.innerHTML += `<tr>
-                    <td style="color:var(--text-muted); font-size:13px; font-weight: 500;">${log.date}</td>
+                    <td style="color:var(--text-muted); font-size:13px; font-weight: 500;">${displayDate}</td>
                     <td><strong style="color: #fff;">${log.tech}</strong></td>
                     <td style="font-weight:600; color:${actionColor};">${log.item}</td>
                     <td style="color:var(--text-muted); font-size:14px; line-height: 1.4;">${log.reason}</td>
@@ -905,8 +922,17 @@
                 cleanItemName = cleanItemName.trim();
                 itemCounts[cleanItemName] = (itemCounts[cleanItemName] || 0) + 1;
 
+                // Clean up the ISO date for the report specifically
+                let displayDate = log.date;
+                try {
+                    let d = new Date(log.date);
+                    if(!isNaN(d.getTime())) {
+                        displayDate = d.toLocaleDateString() + " " + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    }
+                } catch(e) {}
+
                 reportTableHTML += `<tr>
-                    <td>${log.date}</td>
+                    <td>${displayDate}</td>
                     <td>${log.tech}</td>
                     <td>${log.item}</td>
                     <td>${log.reason}</td>
