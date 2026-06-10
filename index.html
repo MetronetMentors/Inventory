@@ -167,16 +167,24 @@
 
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 15px; }
         th { padding: 0 20px 15px; text-align: left; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; border: none; }
-        td { padding: 18px 20px; background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03); transition: all 0.2s; }
+        td { padding: 20px 24px; background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03); transition: all 0.2s; }
         td:first-child { border-left: 1px solid rgba(255,255,255,0.03); border-radius: 12px 0 0 12px; }
         td:last-child { border-right: 1px solid rgba(255,255,255,0.03); border-radius: 0 12px 12px 0; }
         tr:hover td { background: rgba(255,255,255,0.05); transform: scale(1.005); cursor: pointer; }
 
-        .badge { padding: 6px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.8px; }
+        /* UNIFORM BADGES / BUBBLES */
+        .badge { padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.8px; display: inline-block; white-space: nowrap; }
+        
+        /* Category Badges */
         .badge.serialized { background: rgba(126, 63, 242, 0.15); color: #c4a1ff; border: 1px solid rgba(126, 63, 242, 0.3); }
         .badge.bulk { background: rgba(164, 176, 190, 0.1); color: var(--text-muted); border: 1px solid rgba(164, 176, 190, 0.2);}
         .badge.clothing { background: rgba(52, 152, 219, 0.15); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3); }
         .badge.ladders { background: rgba(243, 156, 18, 0.15); color: #f39c12; border: 1px solid rgba(243, 156, 18, 0.3); }
+        
+        /* New Action Badges */
+        .badge.action-issue { background: rgba(126, 63, 242, 0.15); color: #c4a1ff; border: 1px solid rgba(126, 63, 242, 0.3); }
+        .badge.action-swap { background: rgba(243, 156, 18, 0.15); color: #f39c12; border: 1px solid rgba(243, 156, 18, 0.3); }
+        .badge.action-lost { background: rgba(255, 71, 87, 0.15); color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.3); }
 
         .search-bar { 
             width: 100%; padding: 16px 16px 16px 50px; border: 1px solid var(--border); border-radius: 12px; 
@@ -213,9 +221,12 @@
         .stat-card h3 { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         .stat-card p { font-size: 28px; font-weight: 700; color: #fff; }
 
-        /* --- EXTREME PRINT ENGINE FIX v3 --- */
+        /* --- EXTREME PRINT ENGINE FIX v4 --- */
         @media print {
             @page { margin: 0.5in; size: portrait; } 
+            
+            /* Forces background colors and badge bubbles to print */
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; display: block !important; background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
             .sidebar, .main-content, #loginOverlay, #scannerOverlay, #toast-container, #imgPreviewBox { display: none !important; }
@@ -247,20 +258,25 @@
                 width: auto !important; 
                 height: auto !important; 
                 filter: invert(1) hue-rotate(180deg); 
-                object-fit: contain !important; /* Prevents squishing */
+                object-fit: contain !important;
             } 
             
             table { display: table !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 50px !important; table-layout: fixed !important; page-break-inside: auto !important; }
             thead { display: table-header-group !important; }
             tbody { display: table-row-group !important; }
             tr { display: table-row !important; background: white !important; padding: 0 !important; margin: 0 !important; border: none !important; box-shadow: none !important; page-break-inside: avoid !important; page-break-after: auto !important; }
-            th, td { display: table-cell !important; text-align: left !important; padding: 10px 5px !important; border-bottom: 1px solid #ddd !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; word-wrap: break-word !important; white-space: normal !important; font-size: 11px !important; }
+            
+            /* Print Table Cell Formatting */
+            th, td { display: table-cell !important; text-align: left !important; padding: 12px 8px !important; border-bottom: 1px solid #ddd !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; word-wrap: break-word !important; white-space: normal !important; font-size: 11px !important; vertical-align: top !important; }
             th { border-bottom: 2px solid #000 !important; font-weight: bold !important; font-size: 11px !important; }
+            
+            /* Action Bubbles inside Print */
+            td .badge { background: #f0f0f0 !important; border: 1px solid #ccc !important; padding: 4px 8px !important; display: inline-block !important; }
             
             th:nth-child(1), td:nth-child(1) { width: 15% !important; } 
             th:nth-child(2), td:nth-child(2) { width: 15% !important; } 
-            th:nth-child(3), td:nth-child(3) { width: 25% !important; } 
-            th:nth-child(4), td:nth-child(4) { width: 45% !important; } 
+            th:nth-child(3), td:nth-child(3) { width: 35% !important; } 
+            th:nth-child(4), td:nth-child(4) { width: 35% !important; } 
         }
 
         /* --- MOBILE LAYOUT --- */
@@ -302,10 +318,15 @@
             
             td { border: none !important; padding: 0 !important; text-align: left; background: transparent !important; }
             
-            #logsTableBody td:nth-child(2) { font-size: 20px; margin-bottom: 6px; order: 1; } 
+            #logsTableBody td:nth-child(2) { font-size: 20px; margin-bottom: 8px; order: 1; } 
             #logsTableBody td:nth-child(3) { order: 2; margin-bottom: 15px; font-size: 16px; } 
             #logsTableBody td:nth-child(4) { order: 3; background: rgba(0,0,0,0.5) !important; padding: 15px !important; border-radius: 8px; margin-bottom: 15px; font-size: 14px; color: #ccc !important; } 
             #logsTableBody td:nth-child(1) { order: 4; text-align: right; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px !important; font-size: 12px; color: #8b949e !important; } 
+            
+            #reportTableBody td:nth-child(2) { font-size: 20px; margin-bottom: 8px; order: 1; } 
+            #reportTableBody td:nth-child(3) { order: 2; margin-bottom: 15px; font-size: 16px; } 
+            #reportTableBody td:nth-child(4) { order: 3; background: rgba(0,0,0,0.5) !important; padding: 15px !important; border-radius: 8px; margin-bottom: 15px; font-size: 14px; color: #ccc !important; } 
+            #reportTableBody td:nth-child(1) { order: 4; text-align: right; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px !important; font-size: 12px; color: #8b949e !important; }
 
             #inventoryTableBody td:nth-child(1) { padding-right: 50px !important; margin-bottom: 15px; font-size: 18px; } 
             #inventoryTableBody td:nth-child(2) { display: inline-block; width: max-content; } 
@@ -344,7 +365,7 @@
 
             <h3 style="margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Detailed Transaction Ledger</h3>
             <table style="margin-top: 0;">
-                <thead><tr><th>Date</th><th>Tech</th><th>Action</th><th>Details</th></tr></thead>
+                <thead><tr><th>Date</th><th>Tech</th><th>Action</th><th>Notes</th></tr></thead>
                 <tbody id="reportTableBody"></tbody>
             </table>
         </div>
@@ -869,6 +890,7 @@
             });
         }
 
+        // --- NEW BUBBLE LOGIC ADDED HERE ---
         function renderLogsTable() {
             let logTable = document.getElementById('logsTableBody');
             logTable.innerHTML = '';
@@ -889,10 +911,19 @@
             }
 
             currentFilteredLogs.forEach(log => {
-                let actionColor = "var(--text-main)";
-                if(log.item.includes("Issued:") || log.item.includes("Replaced:")) actionColor = "#c4a1ff";
-                if(log.item.includes("Lost:")) actionColor = "var(--alert)";
-                if(log.item.includes("Swap:")) actionColor = "#f39c12";
+                let actionBadge = `<span class="badge" style="background: rgba(164, 176, 190, 0.15); color: var(--text-muted);">RECORD</span>`;
+                let actionText = log.item;
+
+                if(log.item.startsWith("Issued:")) {
+                    actionBadge = `<span class="badge action-issue">ISSUED</span>`;
+                    actionText = log.item.replace("Issued:", "").trim();
+                } else if(log.item.startsWith("Swap:")) {
+                    actionBadge = `<span class="badge action-swap">SWAP</span>`;
+                    actionText = log.item.replace("Swap:", "").trim();
+                } else if(log.item.startsWith("Lost:")) {
+                    actionBadge = `<span class="badge action-lost">LOST</span>`;
+                    actionText = log.item.replace("Lost:", "").trim();
+                }
 
                 let displayDate = log.date;
                 try {
@@ -905,8 +936,8 @@
                 logTable.innerHTML += `<tr>
                     <td style="color:var(--text-muted); font-size:13px; font-weight: 500;">${displayDate}</td>
                     <td><strong style="color: #fff;">${log.tech}</strong></td>
-                    <td style="font-weight:600; color:${actionColor};">${log.item}</td>
-                    <td style="color:var(--text-muted); font-size:14px; line-height: 1.4;">${log.reason}</td>
+                    <td><div style="display:flex; align-items:center; gap:12px;">${actionBadge} <span style="font-weight:600; color:#fff;">${actionText}</span></div></td>
+                    <td style="color:var(--text-muted); font-size:14px; line-height: 1.5;">${log.reason}</td>
                 </tr>`;
             });
         }
@@ -934,6 +965,20 @@
                 cleanItemName = cleanItemName.trim();
                 itemCounts[cleanItemName] = (itemCounts[cleanItemName] || 0) + 1;
 
+                let actionBadge = `<span class="badge" style="background: rgba(164, 176, 190, 0.15); color: var(--text-muted);">RECORD</span>`;
+                let actionText = log.item;
+
+                if(log.item.startsWith("Issued:")) {
+                    actionBadge = `<span class="badge action-issue">ISSUED</span>`;
+                    actionText = log.item.replace("Issued:", "").trim();
+                } else if(log.item.startsWith("Swap:")) {
+                    actionBadge = `<span class="badge action-swap">SWAP</span>`;
+                    actionText = log.item.replace("Swap:", "").trim();
+                } else if(log.item.startsWith("Lost:")) {
+                    actionBadge = `<span class="badge action-lost">LOST</span>`;
+                    actionText = log.item.replace("Lost:", "").trim();
+                }
+
                 let displayDate = log.date;
                 try {
                     let d = new Date(log.date);
@@ -944,9 +989,9 @@
 
                 reportTableHTML += `<tr>
                     <td>${displayDate}</td>
-                    <td>${log.tech}</td>
-                    <td>${log.item}</td>
-                    <td>${log.reason}</td>
+                    <td style="font-weight: 600;">${log.tech}</td>
+                    <td><div style="display:flex; align-items:center; gap:8px;">${actionBadge} <span>${actionText}</span></div></td>
+                    <td style="line-height: 1.5;">${log.reason}</td>
                 </tr>`;
             });
 
