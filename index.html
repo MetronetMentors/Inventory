@@ -215,7 +215,7 @@
 
         /* --- EXTREME PRINT ENGINE FIX --- */
         @media print {
-            @page { margin: 0.5in; } /* Lets the browser decide orientation, but portrait is fixed now */
+            @page { margin: 0.5in; size: portrait; } 
             
             /* 1. Kill the app lock so pages scroll infinitely on paper */
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; display: block !important; background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
@@ -229,14 +229,33 @@
             /* 4. Strip dark mode boxes */
             .report-box { background: white !important; color: black !important; box-shadow: none !important; border: none !important; padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
             .report-box h2, .report-box h3, .report-box p, .report-box td, .report-box th, .report-box span { color: black !important; text-shadow: none !important; }
-            .stat-card { background: transparent !important; border: 1px solid #ccc !important; break-inside: avoid; }
+            
+            /* 5. Force 4 columns for stats just like the screen */
+            .report-stats { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 15px !important; margin: 20px 0 !important; }
+            .stat-card { background: white !important; border: 2px solid #eaeaea !important; break-inside: avoid; box-shadow: none !important; padding: 15px !important; border-radius: 8px !important; }
+            .stat-card h3 { color: #555 !important; font-size: 11px !important; }
+            .stat-card p { font-size: 24px !important; }
+
             .no-print { display: none !important; }
             
-            /* 5. Chart scaling and inversion */
-            .chart-container { max-height: 250px !important; page-break-inside: avoid !important; margin-bottom: 20px !important; border: none !important; }
-            canvas { max-width: 100% !important; filter: invert(1) hue-rotate(180deg); } 
+            /* 6. Fix the Chart squish */
+            .chart-container { 
+                height: 350px !important; 
+                width: 100% !important; 
+                page-break-inside: avoid !important; 
+                margin: 30px 0 !important; 
+                border: none !important; 
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+            canvas { 
+                max-width: 100% !important; 
+                height: 100% !important; 
+                filter: invert(1) hue-rotate(180deg); 
+            } 
             
-            /* 6. FORCE A PERFECT, UN-SQUISHED TABLE */
+            /* 7. FORCE A PERFECT, UN-SQUISHED TABLE */
             table { display: table !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 50px !important; table-layout: fixed !important; page-break-inside: auto !important; }
             thead { display: table-header-group !important; }
             tbody { display: table-row-group !important; }
@@ -244,10 +263,11 @@
             th, td { display: table-cell !important; text-align: left !important; padding: 10px 5px !important; border-bottom: 1px solid #ddd !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; word-wrap: break-word !important; white-space: normal !important; font-size: 11px !important; }
             th { border-bottom: 2px solid #000 !important; font-weight: bold !important; font-size: 11px !important; }
             
-            th:nth-child(1), td:nth-child(1) { width: 15% !important; } /* Date */
-            th:nth-child(2), td:nth-child(2) { width: 15% !important; } /* Tech */
-            th:nth-child(3), td:nth-child(3) { width: 25% !important; } /* Action */
-            th:nth-child(4), td:nth-child(4) { width: 45% !important; } /* Details */
+            /* Clean Column Widths for Portrait Paper */
+            th:nth-child(1), td:nth-child(1) { width: 15% !important; } 
+            th:nth-child(2), td:nth-child(2) { width: 15% !important; } 
+            th:nth-child(3), td:nth-child(3) { width: 25% !important; } 
+            th:nth-child(4), td:nth-child(4) { width: 45% !important; } 
         }
 
         /* --- MOBILE LAYOUT --- */
@@ -325,7 +345,7 @@
                 <div class="stat-card"><h3>Items Lost</h3><p id="repLost" style="color: var(--alert);">0</p></div>
             </div>
 
-            <div class="chart-container" style="height: 250px; margin-bottom: 30px;">
+            <div class="chart-container">
                 <canvas id="reportSpecificChart"></canvas>
             </div>
 
@@ -881,7 +901,6 @@
                 if(log.item.includes("Lost:")) actionColor = "var(--alert)";
                 if(log.item.includes("Swap:")) actionColor = "#f39c12";
 
-                // Clean up the ugly ISO date formatting for the display table
                 let displayDate = log.date;
                 try {
                     let d = new Date(log.date);
@@ -922,7 +941,6 @@
                 cleanItemName = cleanItemName.trim();
                 itemCounts[cleanItemName] = (itemCounts[cleanItemName] || 0) + 1;
 
-                // Clean up the ISO date for the report specifically
                 let displayDate = log.date;
                 try {
                     let d = new Date(log.date);
