@@ -181,7 +181,7 @@
         .badge.clothing { background: rgba(52, 152, 219, 0.15); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3); }
         .badge.ladders { background: rgba(243, 156, 18, 0.15); color: #f39c12; border: 1px solid rgba(243, 156, 18, 0.3); }
         
-        /* New Action Badges */
+        /* Action Badges */
         .badge.action-issue { background: rgba(126, 63, 242, 0.15); color: #c4a1ff; border: 1px solid rgba(126, 63, 242, 0.3); }
         .badge.action-swap { background: rgba(243, 156, 18, 0.15); color: #f39c12; border: 1px solid rgba(243, 156, 18, 0.3); }
         .badge.action-lost { background: rgba(255, 71, 87, 0.15); color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.3); }
@@ -221,113 +221,64 @@
         .stat-card h3 { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         .stat-card p { font-size: 28px; font-weight: 700; color: #fff; }
 
-        /* --- EXTREME PRINT ENGINE FIX v4 --- */
+        /* PRINT MEDIA ENGINE */
         @media print {
             @page { margin: 0.5in; size: portrait; } 
-            
-            /* Forces background colors and badge bubbles to print */
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; display: block !important; background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
             .sidebar, .main-content, #loginOverlay, #scannerOverlay, #toast-container, #imgPreviewBox { display: none !important; }
-            
             #reportOverlay { position: static !important; display: block !important; background: white !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; width: 100% !important; }
             .report-box { background: white !important; color: black !important; box-shadow: none !important; border: none !important; padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
             .report-box h2, .report-box h3, .report-box p, .report-box td, .report-box th, .report-box span { color: black !important; text-shadow: none !important; }
-            
             .report-stats { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 15px !important; margin: 20px 0 !important; }
             .stat-card { background: white !important; border: 2px solid #eaeaea !important; break-inside: avoid; box-shadow: none !important; padding: 15px !important; border-radius: 8px !important; }
             .stat-card h3 { color: #555 !important; font-size: 11px !important; }
             .stat-card p { font-size: 24px !important; }
             .no-print { display: none !important; }
-            
-            /* FIXED ASPECT RATIO FOR PRINTED CHART */
-            .chart-container { 
-                height: 250px !important; 
-                width: 100% !important; 
-                page-break-inside: avoid !important; 
-                margin: 30px 0 !important; 
-                border: none !important; 
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-            }
-            canvas { 
-                max-width: 100% !important; 
-                max-height: 250px !important; 
-                width: auto !important; 
-                height: auto !important; 
-                filter: invert(1) hue-rotate(180deg); 
-                object-fit: contain !important;
-            } 
-            
+            .chart-container { height: 250px !important; width: 100% !important; page-break-inside: avoid !important; margin: 30px 0 !important; border: none !important; display: flex !important; justify-content: center !important; align-items: center !important; }
+            canvas { max-width: 100% !important; max-height: 250px !important; width: auto !important; height: auto !important; filter: invert(1) hue-rotate(180deg); object-fit: contain !important; } 
             table { display: table !important; width: 100% !important; border-collapse: collapse !important; margin-bottom: 50px !important; table-layout: fixed !important; page-break-inside: auto !important; }
             thead { display: table-header-group !important; }
             tbody { display: table-row-group !important; }
             tr { display: table-row !important; background: white !important; padding: 0 !important; margin: 0 !important; border: none !important; box-shadow: none !important; page-break-inside: avoid !important; page-break-after: auto !important; }
-            
-            /* Print Table Cell Formatting */
             th, td { display: table-cell !important; text-align: left !important; padding: 12px 8px !important; border-bottom: 1px solid #ddd !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; word-wrap: break-word !important; white-space: normal !important; font-size: 11px !important; vertical-align: top !important; }
             th { border-bottom: 2px solid #000 !important; font-weight: bold !important; font-size: 11px !important; }
-            
-            /* Action Bubbles inside Print */
             td .badge { background: #f0f0f0 !important; border: 1px solid #ccc !important; padding: 4px 8px !important; display: inline-block !important; }
-            
             th:nth-child(1), td:nth-child(1) { width: 15% !important; } 
             th:nth-child(2), td:nth-child(2) { width: 15% !important; } 
             th:nth-child(3), td:nth-child(3) { width: 35% !important; } 
             th:nth-child(4), td:nth-child(4) { width: 35% !important; } 
         }
 
-        /* --- MOBILE LAYOUT --- */
+        /* MOBILE RESPONSIVE ENGINE */
         @media (max-width: 900px) {
             .sidebar { position: fixed; height: 100%; left: -280px; background: rgba(18, 18, 18, 0.95); }
             .sidebar.open { left: 0; box-shadow: 30px 0 60px rgba(0,0,0,0.9); }
             .menu-toggle { display: block; }
             .admin-grid { grid-template-columns: 1fr; }
-            
             .top-header { padding: 15px 20px; }
             .content-container { padding: 15px 15px 80px 15px; }
             .app-card { padding: 20px 15px; border-radius: 12px; }
-            
             input, select, textarea { padding: 12px; font-size: 14px; }
-            
             .form-grid-2 { grid-template-columns: 1fr; gap: 15px; }
             .issue-block, .return-block, .flag-block, .notes-block { padding: 20px 15px; margin-bottom: 0px; }
             .report-stats { grid-template-columns: 1fr 1fr; } 
-
             .tx-type-group { flex-direction: column; gap: 8px; margin-bottom: 20px; }
             #toast-container { left: 20px; right: 20px; bottom: 20px; align-items: center; }
             .toast { width: 100%; justify-content: center; }
             .chart-container { height: 300px; padding: 10px; }
-
             table, thead, tbody, th, td, tr { display: block; width: 100%; }
             thead tr { display: none; } 
-            
-            tr {
-                background: rgba(25, 25, 25, 0.9) !important;
-                border: 1px solid rgba(255,255,255,0.1) !important;
-                border-radius: 12px !important;
-                padding: 20px !important;
-                margin-bottom: 20px;
-                display: flex;
-                flex-direction: column;
-                position: relative;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            }
-            
+            tr { background: rgba(25, 25, 25, 0.9) !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 12px !important; padding: 20px !important; margin-bottom: 20px; display: flex; flex-direction: column; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
             td { border: none !important; padding: 0 !important; text-align: left; background: transparent !important; }
-            
             #logsTableBody td:nth-child(2) { font-size: 20px; margin-bottom: 8px; order: 1; } 
             #logsTableBody td:nth-child(3) { order: 2; margin-bottom: 15px; font-size: 16px; } 
             #logsTableBody td:nth-child(4) { order: 3; background: rgba(0,0,0,0.5) !important; padding: 15px !important; border-radius: 8px; margin-bottom: 15px; font-size: 14px; color: #ccc !important; } 
             #logsTableBody td:nth-child(1) { order: 4; text-align: right; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px !important; font-size: 12px; color: #8b949e !important; } 
-            
             #reportTableBody td:nth-child(2) { font-size: 20px; margin-bottom: 8px; order: 1; } 
             #reportTableBody td:nth-child(3) { order: 2; margin-bottom: 15px; font-size: 16px; } 
             #reportTableBody td:nth-child(4) { order: 3; background: rgba(0,0,0,0.5) !important; padding: 15px !important; border-radius: 8px; margin-bottom: 15px; font-size: 14px; color: #ccc !important; } 
             #reportTableBody td:nth-child(1) { order: 4; text-align: right; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px !important; font-size: 12px; color: #8b949e !important; }
-
             #inventoryTableBody td:nth-child(1) { padding-right: 50px !important; margin-bottom: 15px; font-size: 18px; } 
             #inventoryTableBody td:nth-child(2) { display: inline-block; width: max-content; } 
             #inventoryTableBody td:nth-child(3) { position: absolute; top: 20px; right: 20px; font-size: 26px !important; } 
@@ -487,7 +438,7 @@
                                     </label>
                                 </div>
                                 <div id="supMessageWrap" style="display:none; margin-top: 15px;">
-                                    <textarea id="supMessageInput" rows="2" placeholder="Why are you flagging leadership? (e.g. 'Need approval for 3rd replacement this month')"></textarea>
+                                    <textarea id="supMessageInput" rows="2" placeholder="Why are you flagging leadership?"></textarea>
                                 </div>
                             </div>
 
@@ -534,7 +485,6 @@
             </div>
 
             <div id="adminTab" class="tab-content">
-                
                 <div id="lowStockAlert" class="alert-banner">
                     <span style="font-size:22px;">⚠️</span>
                     <div>
@@ -677,12 +627,14 @@
             let filteredInv = localInventory;
             
             if (filterValue !== "All") { filteredInv = localInventory.filter(item => item.trackType === filterValue); }
-            filteredInv.sort((a, b) => a.name.localeCompare(b.name));
+            filteredInv.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 
             targetSelect.innerHTML = type === 'issue' ? '<option value="" disabled selected>-- Select Hardware --</option>' : '<option value="">-- None (No Return) --</option>';
             filteredInv.forEach(item => {
-                let safeName = item.name.replace(/"/g, "&quot;");
-                targetSelect.innerHTML += `<option value="${safeName}">${item.name}</option>`;
+                if(item && item.name) {
+                    let safeName = item.name.replace(/"/g, "&quot;");
+                    targetSelect.innerHTML += `<option value="${safeName}">${item.name}</option>`;
+                }
             });
             
             if(type === 'issue') checkIssueTier();
@@ -820,21 +772,25 @@
             techSelect.innerHTML = '<option value="" disabled selected>-- Select Name --</option>';
             if(removeTechSelect) removeTechSelect.innerHTML = '<option value="" disabled selected>-- Select Name --</option>';
             
-            let sortedTechs = [...localTechs].sort((a,b) => a.localeCompare(b));
+            let sortedTechs = [...localTechs].sort((a,b) => (a || "").localeCompare(b || ""));
             sortedTechs.forEach(t => {
-                let optionHTML = `<option value="${t}">${t}</option>`;
-                techSelect.innerHTML += optionHTML;
-                if(removeTechSelect) removeTechSelect.innerHTML += optionHTML;
+                if(t) {
+                    let optionHTML = `<option value="${t}">${t}</option>`;
+                    techSelect.innerHTML += optionHTML;
+                    if(removeTechSelect) removeTechSelect.innerHTML += optionHTML;
+                }
             });
 
             updateDropdown('issue'); updateDropdown('return');
 
             let adjustSelect = document.getElementById('adjustItemSelect');
             adjustSelect.innerHTML = '<option value="" disabled selected>-- Select Asset --</option>';
-            let sortedInv = [...localInventory].sort((a,b) => a.name.localeCompare(b.name));
+            let sortedInv = [...localInventory].sort((a,b) => (a.name || "").localeCompare(b.name || ""));
             sortedInv.forEach(item => {
-                let safeName = item.name.replace(/"/g, "&quot;");
-                adjustSelect.innerHTML += `<option value="${safeName}">${item.name}</option>`;
+                if(item && item.name) {
+                    let safeName = item.name.replace(/"/g, "&quot;");
+                    adjustSelect.innerHTML += `<option value="${safeName}">${item.name}</option>`;
+                }
             });
 
             let lowStockItems = localInventory.filter(item => item.qty <= 1);
@@ -858,8 +814,8 @@
             let searchInput = document.getElementById('inventorySearchInput');
             let searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
             
-            let sortedInv = [...localInventory].sort((a,b) => a.name.localeCompare(b.name));
-            let filteredInventory = sortedInv.filter(item => item.name && item.name.toLowerCase().includes(searchTerm));
+            let sortedInv = [...localInventory].sort((a,b) => (a.name || "").localeCompare(b.name || ""));
+            let filteredInventory = sortedInv.filter(item => item && item.name && item.name.toLowerCase().includes(searchTerm));
 
             if(filteredInventory.length === 0) {
                 invTable.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:40px; font-weight: 500;">No matching hardware found in catalog.</td></tr>';
@@ -890,7 +846,6 @@
             });
         }
 
-        // --- NEW BUBBLE LOGIC ADDED HERE ---
         function renderLogsTable() {
             let logTable = document.getElementById('logsTableBody');
             logTable.innerHTML = '';
@@ -898,11 +853,12 @@
             let searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
 
             currentFilteredLogs = localLogs.slice().reverse().filter(log => {
-                if (log.tech === "SYSTEM") return false; 
-                return (log.date && log.date.toString().toLowerCase().includes(searchTerm)) || 
-                       (log.tech && log.tech.toLowerCase().includes(searchTerm)) || 
-                       (log.item && log.item.toLowerCase().includes(searchTerm)) || 
-                       (log.reason && log.reason.toLowerCase().includes(searchTerm));
+                if (!log || log.tech === "SYSTEM") return false; 
+                let logDate = (log.date || "").toString().toLowerCase();
+                let logTech = (log.tech || "").toLowerCase();
+                let logItem = (log.item || "").toLowerCase();
+                let logReason = (log.reason || "").toLowerCase();
+                return logDate.includes(searchTerm) || logTech.includes(searchTerm) || logItem.includes(searchTerm) || logReason.includes(searchTerm);
             });
 
             if(currentFilteredLogs.length === 0) {
@@ -911,21 +867,22 @@
             }
 
             currentFilteredLogs.forEach(log => {
+                let logItemStr = log.item || "";
                 let actionBadge = `<span class="badge" style="background: rgba(164, 176, 190, 0.15); color: var(--text-muted);">RECORD</span>`;
-                let actionText = log.item;
+                let actionText = logItemStr;
 
-                if(log.item.startsWith("Issued:")) {
+                if(logItemStr.startsWith("Issued:")) {
                     actionBadge = `<span class="badge action-issue">ISSUED</span>`;
-                    actionText = log.item.replace("Issued:", "").trim();
-                } else if(log.item.startsWith("Swap:")) {
+                    actionText = logItemStr.replace("Issued:", "").trim();
+                } else if(logItemStr.startsWith("Swap:")) {
                     actionBadge = `<span class="badge action-swap">SWAP</span>`;
-                    actionText = log.item.replace("Swap:", "").trim();
-                } else if(log.item.startsWith("Lost:")) {
+                    actionText = logItemStr.replace("Swap:", "").trim();
+                } else if(logItemStr.startsWith("Lost:")) {
                     actionBadge = `<span class="badge action-lost">LOST</span>`;
-                    actionText = log.item.replace("Lost:", "").trim();
+                    actionText = logItemStr.replace("Lost:", "").trim();
                 }
 
-                let displayDate = log.date;
+                let displayDate = log.date || "";
                 try {
                     let d = new Date(log.date);
                     if(!isNaN(d.getTime())) {
@@ -935,9 +892,9 @@
 
                 logTable.innerHTML += `<tr>
                     <td style="color:var(--text-muted); font-size:13px; font-weight: 500;">${displayDate}</td>
-                    <td><strong style="color: #fff;">${log.tech}</strong></td>
+                    <td><strong style="color: #fff;">${log.tech || ""}</strong></td>
                     <td><div style="display:flex; align-items:center; gap:12px;">${actionBadge} <span style="font-weight:600; color:#fff;">${actionText}</span></div></td>
-                    <td style="color:var(--text-muted); font-size:14px; line-height: 1.5;">${log.reason}</td>
+                    <td style="color:var(--text-muted); font-size:14px; line-height: 1.5;">${log.reason || ""}</td>
                 </tr>`;
             });
         }
@@ -956,30 +913,33 @@
             let reportTableHTML = "";
 
             currentFilteredLogs.forEach(log => {
-                if(log.item.includes("Issued:")) issued++;
-                if(log.item.includes("Swap:")) swapped++;
-                if(log.item.includes("Lost:")) lost++;
+                let logItemStr = log.item || "";
+                if(logItemStr.includes("Issued:")) issued++;
+                if(logItemStr.includes("Swap:")) swapped++;
+                if(logItemStr.includes("Lost:")) lost++;
 
-                let cleanItemName = log.item.split(":")[1] || log.item;
+                let cleanItemName = logItemStr.split(":")[1] || logItemStr;
                 if(cleanItemName.includes("➔")) cleanItemName = cleanItemName.split("➔")[1]; 
                 cleanItemName = cleanItemName.trim();
-                itemCounts[cleanItemName] = (itemCounts[cleanItemName] || 0) + 1;
-
-                let actionBadge = `<span class="badge" style="background: rgba(164, 176, 190, 0.15); color: var(--text-muted);">RECORD</span>`;
-                let actionText = log.item;
-
-                if(log.item.startsWith("Issued:")) {
-                    actionBadge = `<span class="badge action-issue">ISSUED</span>`;
-                    actionText = log.item.replace("Issued:", "").trim();
-                } else if(log.item.startsWith("Swap:")) {
-                    actionBadge = `<span class="badge action-swap">SWAP</span>`;
-                    actionText = log.item.replace("Swap:", "").trim();
-                } else if(log.item.startsWith("Lost:")) {
-                    actionBadge = `<span class="badge action-lost">LOST</span>`;
-                    actionText = log.item.replace("Lost:", "").trim();
+                if(cleanItemName) {
+                    itemCounts[cleanItemName] = (itemCounts[cleanItemName] || 0) + 1;
                 }
 
-                let displayDate = log.date;
+                let actionBadge = `<span class="badge" style="background: rgba(164, 176, 190, 0.15); color: var(--text-muted);">RECORD</span>`;
+                let actionText = logItemStr;
+
+                if(logItemStr.startsWith("Issued:")) {
+                    actionBadge = `<span class="badge action-issue">ISSUED</span>`;
+                    actionText = logItemStr.replace("Issued:", "").trim();
+                } else if(logItemStr.startsWith("Swap:")) {
+                    actionBadge = `<span class="badge action-swap">SWAP</span>`;
+                    actionText = logItemStr.replace("Swap:", "").trim();
+                } else if(logItemStr.startsWith("Lost:")) {
+                    actionBadge = `<span class="badge action-lost">LOST</span>`;
+                    actionText = logItemStr.replace("Lost:", "").trim();
+                }
+
+                let displayDate = log.date || "";
                 try {
                     let d = new Date(log.date);
                     if(!isNaN(d.getTime())) {
@@ -989,9 +949,9 @@
 
                 reportTableHTML += `<tr>
                     <td>${displayDate}</td>
-                    <td style="font-weight: 600;">${log.tech}</td>
+                    <td style="font-weight: 600;">${log.tech || ""}</td>
                     <td><div style="display:flex; align-items:center; gap:8px;">${actionBadge} <span>${actionText}</span></div></td>
-                    <td style="line-height: 1.5;">${log.reason}</td>
+                    <td style="line-height: 1.5;">${log.reason || ""}</td>
                 </tr>`;
             });
 
@@ -1039,10 +999,11 @@
 
             let checkoutCounts = {};
             localLogs.forEach(log => {
-                if(log.tech === "SYSTEM") return;
+                if(!log || log.tech === "SYSTEM") return;
+                let logItemStr = log.item || "";
                 let pulledItem = "";
-                if (log.item.startsWith("Issued:")) pulledItem = log.item.split("Issued:")[1].trim();
-                else if (log.item.startsWith("Swap:") && log.item.includes("➔")) pulledItem = log.item.split("➔")[1].trim();
+                if (logItemStr.startsWith("Issued:")) pulledItem = logItemStr.split("Issued:")[1].trim();
+                else if (logItemStr.startsWith("Swap:") && logItemStr.includes("➔")) pulledItem = logItemStr.split("➔")[1].trim();
                 if (pulledItem) checkoutCounts[pulledItem] = (checkoutCounts[pulledItem] || 0) + 1;
             });
 
