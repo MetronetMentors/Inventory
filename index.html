@@ -180,7 +180,7 @@
 
         .search-bar { 
             width: 100%; padding: 16px 16px 16px 50px; border: 1px solid var(--border); border-radius: 12px; 
-            font-size: 15px; margin-bottom: 0; /* Reset for flex row */
+            font-size: 15px; margin-bottom: 0;
             background: var(--bg-surface) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%238b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 18px center; 
             color: var(--text-main); transition: all 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -213,16 +213,45 @@
         .stat-card h3 { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         .stat-card p { font-size: 28px; font-weight: 700; color: #fff; }
 
-        /* PRINT CSS - Makes the report look perfect on paper */
+        /* --- NEW UPGRADED PRINT ENGINE --- */
         @media print {
-            body * { visibility: hidden; }
-            #reportOverlay, #reportOverlay * { visibility: visible; }
-            #reportOverlay { position: absolute; left: 0; top: 0; width: 100%; padding: 0; background: white !important; }
-            .report-box { background: white !important; color: black !important; box-shadow: none; border: none; padding: 0; max-width: none; margin: 0; }
+            /* 1. Unlock the body height so the browser can see multiple pages */
+            body, html { height: auto !important; overflow: visible !important; background: white !important; }
+            
+            /* 2. Hide the entire app so it doesn't take up any physical paper space */
+            .sidebar, .main-content, #loginOverlay, #scannerOverlay, #toast-container { display: none !important; }
+            
+            /* 3. Pull the report overlay into the standard document flow */
+            #reportOverlay { 
+                position: relative !important; 
+                display: block !important; 
+                background: white !important; 
+                padding: 0 !important; 
+                overflow: visible !important; 
+            }
+            
+            /* 4. Strip the dark mode styling for clean paper */
+            .report-box { 
+                background: white !important; 
+                color: black !important; 
+                box-shadow: none !important; 
+                border: none !important; 
+                padding: 0 !important; 
+                max-width: 100% !important; 
+                margin: 0 !important; 
+            }
+            
             .report-box h2, .report-box h3, .report-box p, .report-box td, .report-box th, .report-box span { color: black !important; border-color: #ccc !important; text-shadow: none !important; }
-            .stat-card { background: transparent !important; border: 1px solid #ccc !important; }
+            .stat-card { background: transparent !important; border: 1px solid #ccc !important; break-inside: avoid; }
             .no-print { display: none !important; }
-            canvas { max-width: 100% !important; filter: invert(1); } /* Inverts dark mode chart to look good on white paper */
+            
+            /* 5. Chart scaling and color inversion */
+            canvas { max-width: 100% !important; filter: invert(1); max-height: 250px !important; } 
+            
+            /* 6. Prevent table rows from cutting in half at the bottom of the page */
+            table { page-break-inside: auto; margin-bottom: 50px; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+            thead { display: table-header-group; }
             table td { border-bottom: 1px solid #ddd !important; }
         }
 
@@ -241,7 +270,7 @@
             
             .form-grid-2 { grid-template-columns: 1fr; gap: 15px; }
             .issue-block, .return-block, .flag-block, .notes-block { padding: 20px 15px; margin-bottom: 0px; }
-            .report-stats { grid-template-columns: 1fr 1fr; } /* 2x2 grid for stats on mobile */
+            .report-stats { grid-template-columns: 1fr 1fr; } 
 
             .tx-type-group { flex-direction: column; gap: 8px; margin-bottom: 20px; }
             #toast-container { left: 20px; right: 20px; bottom: 20px; align-items: center; }
@@ -544,9 +573,9 @@
         let localTechs = [];
         let localInventory = [];
         let localLogs = [];
-        let currentFilteredLogs = []; // Keeps track of what is currently on screen for the report
+        let currentFilteredLogs = []; 
         let checkoutChartInstance = null; 
-        let reportChartInstance = null; // New chart for the report modal
+        let reportChartInstance = null; 
         let html5QrCode;
         let activeScanInput = '';
 
@@ -742,7 +771,7 @@
                     localTechs = data.techs || [];
                     localInventory = data.inventory || [];
                     localLogs = data.logs || [];
-                    currentFilteredLogs = localLogs.slice().reverse(); // Initialize
+                    currentFilteredLogs = localLogs.slice().reverse(); 
                     document.getElementById('loginOverlay').style.opacity = '0';
                     setTimeout(() => document.getElementById('loginOverlay').style.display = 'none', 300);
                     renderInterface();
@@ -838,7 +867,6 @@
             let searchInput = document.getElementById('logSearchInput');
             let searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
 
-            // Update the global filtered array so the Report Generator knows what to pull
             currentFilteredLogs = localLogs.slice().reverse().filter(log => {
                 if (log.tech === "SYSTEM") return false; 
                 return (log.date && log.date.toString().toLowerCase().includes(searchTerm)) || 
@@ -867,7 +895,6 @@
             });
         }
 
-        // --- NEW REPORT ENGINE ---
         function generateReport() {
             if(currentFilteredLogs.length === 0) {
                 return showToast("No records found to generate a report.", "error");
@@ -879,7 +906,6 @@
 
             let issued = 0, swapped = 0, lost = 0;
             let itemCounts = {};
-
             let reportTableHTML = "";
 
             currentFilteredLogs.forEach(log => {
@@ -888,15 +914,15 @@
                 if(log.item.includes("Lost:")) lost++;
 
                 let cleanItemName = log.item.split(":")[1] || log.item;
-                if(cleanItemName.includes("➔")) cleanItemName = cleanItemName.split("➔")[1]; // Get the new item in a swap
+                if(cleanItemName.includes("➔")) cleanItemName = cleanItemName.split("➔")[1]; 
                 cleanItemName = cleanItemName.trim();
                 itemCounts[cleanItemName] = (itemCounts[cleanItemName] || 0) + 1;
 
                 reportTableHTML += `<tr>
-                    <td style="font-size:12px; color:gray;">${log.date}</td>
-                    <td style="font-weight:bold;">${log.tech}</td>
-                    <td>${log.item}</td>
-                    <td style="font-size:12px;">${log.reason}</td>
+                    <td style="font-size:12px; color:gray; width: 20%;">${log.date}</td>
+                    <td style="font-weight:bold; width: 20%;">${log.tech}</td>
+                    <td style="width: 30%;">${log.item}</td>
+                    <td style="font-size:12px; width: 30%;">${log.reason}</td>
                 </tr>`;
             });
 
@@ -906,7 +932,6 @@
             document.getElementById('repLost').innerText = lost;
             document.getElementById('reportTableBody').innerHTML = reportTableHTML;
 
-            // Render Report Chart
             let sortedItems = Object.keys(itemCounts).sort((a,b) => itemCounts[b] - itemCounts[a]).slice(0, 8);
             let chartData = sortedItems.map(item => itemCounts[item]);
 
@@ -929,18 +954,14 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { color: '#fcfcfc', font: {family: 'Inter'} } }
-                    }
+                    plugins: { legend: { position: 'right', labels: { color: '#fcfcfc', font: {family: 'Inter'} } } }
                 }
             });
 
             document.getElementById('reportOverlay').style.display = 'block';
         }
 
-        function closeReport() {
-            document.getElementById('reportOverlay').style.display = 'none';
-        }
+        function closeReport() { document.getElementById('reportOverlay').style.display = 'none'; }
 
         function renderAnalyticsChart() {
             const canvas = document.getElementById('checkoutChart');
@@ -1014,9 +1035,7 @@
             btn.style.opacity = '0.7';
             btn.style.pointerEvents = 'none';
 
-            if(!document.getElementById('spinnerAnim')) {
-                document.body.insertAdjacentHTML('beforeend', '<style id="spinnerAnim">@keyframes spin { 100% { transform: rotate(360deg); } }</style>');
-            }
+            if(!document.getElementById('spinnerAnim')) { document.body.insertAdjacentHTML('beforeend', '<style id="spinnerAnim">@keyframes spin { 100% { transform: rotate(360deg); } }</style>'); }
 
             const mode = document.querySelector('input[name="txType"]:checked').value;
             const tName = document.getElementById('techSelect').value;
