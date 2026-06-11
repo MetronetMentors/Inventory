@@ -500,8 +500,16 @@
 
             <div id="analyticsTab" class="tab-content">
                 <div class="app-card">
-                    <h2>Equipment Checkout Trends</h2>
-                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;">Live visual representation of all hardware pulled from the locker (Issues & Swaps).</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px;">
+                        <h2 style="margin-bottom: 0;">Equipment Checkout Trends</h2>
+                        <select id="chartTimeFilter" onchange="renderAnalyticsChart()" style="width: auto; padding: 10px 15px; background: rgba(126, 63, 242, 0.1); border: 1px solid rgba(126, 63, 242, 0.3); color: #c4a1ff; border-radius: 8px; font-weight: 600; font-size: 13px;">
+                            <option value="all">All Time</option>
+                            <option value="day">Today</option>
+                            <option value="month">This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; margin-top: -15px;">Live visual representation of hardware pulls. Hover for financial impact.</p>
                     <div class="chart-container">
                         <canvas id="checkoutChart"></canvas>
                     </div>
@@ -1033,28 +1041,66 @@
 
         function closeReport() { document.getElementById('reportOverlay').style.display = 'none'; }
 
+        // --- NEW UPDATED ANALYTICS CHART ENGINE WITH TIME FILTERS & COST HOVER ---
         function renderAnalyticsChart() {
             const canvas = document.getElementById('checkoutChart');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
-            let checkoutCounts = {};
+            let timeFilter = document.getElementById('chartTimeFilter') ? document.getElementById('chartTimeFilter').value : 'all';
+            let now = new Date();
+
+            let checkoutData = {};
+
             localLogs.forEach(log => {
                 if(!log || log.tech === "SYSTEM") return;
+
+                // Process Time Filters
+                if (timeFilter !== 'all' && log.date) {
+                    let logDate = new Date(log.date);
+                    if (isNaN(logDate.getTime())) return; 
+
+                    if (timeFilter === 'day') {
+                        if (logDate.toDateString() !== now.toDateString()) return;
+                    } else if (timeFilter === 'month') {
+                        if (logDate.getMonth() !== now.getMonth() || logDate.getFullYear() !== now.getFullYear()) return;
+                    } else if (timeFilter === 'year') {
+                        if (logDate.getFullYear() !== now.getFullYear()) return;
+                    }
+                }
+
                 let logItemStr = String(log.item || "");
                 let pulledItem = "";
                 if (logItemStr.startsWith("Issued:")) pulledItem = logItemStr.split("Issued:")[1] || "";
                 else if (logItemStr.startsWith("Swap:") && logItemStr.includes("➔")) pulledItem = logItemStr.split("➔")[1] || "";
                 
                 pulledItem = String(pulledItem).trim();
-                if (pulledItem) checkoutCounts[pulledItem] = (checkoutCounts[pulledItem] || 0) + 1;
+                
+                if (pulledItem) {
+                    if (!checkoutData[pulledItem]) {
+                        checkoutData[pulledItem] = { count: 0, totalCost: 0 };
+                    }
+                    checkoutData[pulledItem].count += 1;
+                    
+                    // Attach the cost for the hover tooltip
+                    let matchedAsset = localInventory.find(i => i.name === pulledItem);
+                    if (matchedAsset && matchedAsset.cost) {
+                        checkoutData[pulledItem].totalCost += parseFloat(matchedAsset.cost) || 0;
+                    }
+                }
             });
 
-            let sortedItems = Object.keys(checkoutCounts).sort((a,b) => checkoutCounts[b] - checkoutCounts[a]);
+            let sortedItems = Object.keys(checkoutData).sort((a,b) => checkoutData[b].count - checkoutData[a].count);
             let topLabels = sortedItems.slice(0, 10);
-            let topData = topLabels.map(item => checkoutCounts[item]);
+            let topData = topLabels.map(item => checkoutData[item].count);
+            let topCosts = topLabels.map(item => checkoutData[item].totalCost);
 
-            if(topLabels.length === 0) { topLabels = ["No Data Yet"]; topData = [0]; }
+            if(topLabels.length === 0) { 
+                topLabels = ["No Data Yet"]; 
+                topData = [0]; 
+                topCosts = [0];
+            }
+
             if (checkoutChartInstance) { checkoutChartInstance.destroy(); }
 
             Chart.defaults.color = '#8b949e';
@@ -1076,7 +1122,8 @@
                         borderColor: 'rgba(126, 63, 242, 0.5)',
                         borderWidth: 1,
                         borderRadius: 6,
-                        barPercentage: 0.6
+                        barPercentage: 0.6,
+                        costData: topCosts // Hidden data array for the hover tooltip
                     }]
                 },
                 options: {
@@ -1088,7 +1135,26 @@
                     },
                     plugins: {
                         legend: { display: false },
-                        tooltip: { backgroundColor: 'rgba(18, 18, 18, 0.95)', titleColor: '#00df73', bodyColor: '#fff', titleFont: { size: 14, family: 'Inter', weight: 'bold' }, bodyFont: { size: 13, family: 'Inter' }, padding: 16, borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, cornerRadius: 8, displayColors: false }
+                        tooltip: { 
+                            backgroundColor: 'rgba(18, 18, 18, 0.95)', 
+                            titleColor: '#00df73', 
+                            bodyColor: '#fff', 
+                            titleFont: { size: 14, family: 'Inter', weight: 'bold' }, 
+                            bodyFont: { size: 13, family: 'Inter' }, 
+                            padding: 16, 
+                            borderColor: 'rgba(255,255,255,0.1)', 
+                            borderWidth: 1, 
+                            cornerRadius: 8, 
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let count = context.raw;
+                                    let cost = context.dataset.costData[context.dataIndex];
+                                    let formattedCost = cost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                                    return `Pulled: ${count} units | Liability: $${formattedCost}`;
+                                }
+                            }
+                        }
                     }
                 }
             });
