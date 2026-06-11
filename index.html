@@ -218,7 +218,7 @@
         .stat-card h3 { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         .stat-card p { font-size: 28px; font-weight: 700; color: #fff; }
 
-        /* --- PRINT ENGINE --- */
+        /* --- EXTREME PRINT ENGINE FIX v5 --- */
         @media print {
             @page { margin: 0.5in; size: portrait; } 
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -243,7 +243,7 @@
             tbody { display: table-row-group !important; }
             tr { display: table-row !important; background: white !important; padding: 0 !important; margin: 0 !important; border: none !important; box-shadow: none !important; page-break-inside: avoid !important; page-break-after: auto !important; }
             
-            th, td { display: table-cell !important; text-align: left !important; padding: 12px 8px !important; border-bottom: 1px solid #ddd !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; word-wrap: break-word !important; white-space: normal !important; font-size: 11px !important; vertical-align: top !important; background: transparent !important; }
+            th, td { display: table-cell !important; text-align: left !important; padding: 12px 8px !important; border-bottom: 1px solid #ddd !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; word-wrap: break-word !important; white-space: normal !important; font-size: 11px !important; vertical-align: top !important; }
             th { border-bottom: 2px solid #000 !important; font-weight: bold !important; font-size: 11px !important; }
             
             td .badge { background: #f0f0f0 !important; color: black !important; border: 1px solid #ccc !important; padding: 4px 8px !important; display: inline-block !important; }
@@ -406,14 +406,14 @@
                             <div id="issueBlock" class="issue-block dynamic-section">
                                 <label style="color:var(--primary); margin-bottom: 12px; font-weight: 700; font-size: 13px;">1. Select Category & Asset</label>
                                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                    <select id="issueTierFilter" onchange="updateDropdown('issue')" style="flex: 1; padding: 14px; font-weight: 600; background: rgba(126, 63, 242, 0.1); border-color: rgba(126, 63, 242, 0.3); color: #c4a1ff;">
+                                    <select id="issueTierFilter" onchange="updateDropdown('issue')" style="flex: 0 0 160px; padding: 14px 10px; font-weight: 600; background: rgba(126, 63, 242, 0.1); border-color: rgba(126, 63, 242, 0.3); color: #c4a1ff;">
                                         <option value="All">All Categories</option>
                                         <option value="Serialized">Serialized</option>
                                         <option value="Bulk">Bulk</option>
                                         <option value="Clothing">Clothing</option>
                                         <option value="Ladders">Ladders</option>
                                     </select>
-                                    <select id="equipSelect" onchange="checkIssueTier()" required style="flex: 2; padding: 14px;"><option value="">Loading hardware...</option></select>
+                                    <select id="equipSelect" onchange="checkIssueTier()" required style="flex: 1; padding: 14px;"><option value="">Loading hardware...</option></select>
                                 </div>
                                 <div id="issueSerialWrap" class="serial-field-wrap">
                                     <label style="color:var(--primary); font-weight:700;">2. Scan OUT: New Serial Number</label>
@@ -432,16 +432,16 @@
                             </div>
 
                             <div id="returnBlock" class="return-block dynamic-section">
-                                <label id="returnLabel" style="color:var(--accent); margin-bottom: 12px; font-weight: 700; font-size: 13px;">1. Returning Asset (Optional)</label>
+                                <label id="returnLabel" style="color:var(--accent); margin-bottom: 12px; font-weight: 700; font-size: 13px;">1. Previous Asset (Swap / Replace)</label>
                                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                    <select id="returnTierFilter" onchange="updateDropdown('return')" style="flex: 1; padding: 14px; font-weight: 600; background: rgba(0, 223, 115, 0.1); border-color: rgba(0, 223, 115, 0.3); color: var(--accent);">
+                                    <select id="returnTierFilter" onchange="updateDropdown('return')" style="flex: 0 0 160px; padding: 14px 10px; font-weight: 600; background: rgba(0, 223, 115, 0.1); border-color: rgba(0, 223, 115, 0.3); color: var(--accent);">
                                         <option value="All">All Categories</option>
                                         <option value="Serialized">Serialized</option>
                                         <option value="Bulk">Bulk</option>
                                         <option value="Clothing">Clothing</option>
                                         <option value="Ladders">Ladders</option>
                                     </select>
-                                    <select id="returnEquipSelect" onchange="checkReturnTier()" style="flex: 2; padding: 14px;"><option value="">Loading hardware...</option></select>
+                                    <select id="returnEquipSelect" onchange="checkReturnTier()" style="flex: 1; padding: 14px;"><option value="">Loading hardware...</option></select>
                                 </div>
                                 <div id="returnSerialWrap" class="serial-field-wrap">
                                     <label id="returnSerialLabel" style="color:var(--accent); font-weight:700;">2. Scan IN: Old Serial Number</label>
@@ -451,7 +451,7 @@
                                     </div>
                                 </div>
                                 
-                                <div style="margin-top: 15px;">
+                                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
                                     <label id="brokenCheckWrap" class="checkbox-label" style="margin-top: 0;">
                                         <input type="checkbox" id="brokenCheck" onchange="if(this.checked) document.getElementById('lostCheck').checked = false;">
                                         <span style="color: var(--text-muted); font-size: 13px;"><strong style="color: #f39c12;">MARK AS BROKEN:</strong> Unit is damaged (Goes to RMA).</span>
