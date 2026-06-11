@@ -338,7 +338,7 @@
                 <canvas id="reportSpecificChart"></canvas>
             </div>
 
-            <h3 style="margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Detailed Transaction Ledger</h3>
+            <h3 style="margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Detailed Allocation Ledger</h3>
             <table style="margin-top: 0;">
                 <thead><tr><th>Date</th><th>Tech</th><th>Action</th><th>Notes</th></tr></thead>
                 <tbody id="reportTableBody"></tbody>
@@ -370,13 +370,13 @@
         <img src="https://chambermaster.blob.core.windows.net/images/members/1351/110/MemPageHeader_Metronet_Logotype_wTag_RGB.png" alt="Metronet" class="brand-logo-nav">
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; font-weight:700;">Operations Center</p>
-        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Gear Transactions</button>
+        <button class="nav-btn active" onclick="switchTab('issueTab')">📦 Gear Allocation</button>
         <button class="nav-btn" onclick="switchTab('inventoryTab')">📊 Live Stock Count</button>
         <button class="nav-btn" onclick="switchTab('logsTab')">📝 Logs & Reports</button>
         <button class="nav-btn" onclick="switchTab('analyticsTab')">📈 Analytics</button>
         
         <p style="color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:1.5px; margin-top:35px; margin-bottom:12px; font-weight:700;">System Admin</p>
-        <button class="nav-btn" onclick="requireAdminPassword()">⚙️ Settings & Catalog</button>
+        <button class="nav-btn" onclick="requireAdminPassword()">⚙️ Settings</button>
     </nav>
 
     <main class="main-content">
@@ -394,7 +394,7 @@
             
             <div id="issueTab" class="tab-content active">
                 <div class="app-card">
-                    <h2>Log Field Transaction</h2>
+                    <h2>Log Allocation</h2>
 
                     <form id="issueForm">
                         <div class="form-group">
@@ -404,7 +404,7 @@
 
                         <div class="form-grid-2">
                             <div id="issueBlock" class="issue-block dynamic-section">
-                                <label style="color:var(--primary); margin-bottom: 12px; font-weight: 700; font-size: 13px;">1. Select Category & Asset</label>
+                                <label style="color:var(--primary); margin-bottom: 12px; font-weight: 700; font-size: 13px;">1. Select Category & Gear</label>
                                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                                     <select id="issueTierFilter" onchange="updateDropdown('issue')" style="flex: 0 0 160px; padding: 14px 10px; font-weight: 600; background: rgba(126, 63, 242, 0.1); border-color: rgba(126, 63, 242, 0.3); color: #c4a1ff;">
                                         <option value="All">All Categories</option>
@@ -426,13 +426,13 @@
                                 <div style="margin-top: 15px;">
                                     <label id="lostCheckWrap" class="checkbox-label" style="margin-top: 0;">
                                         <input type="checkbox" id="lostCheck" onchange="if(this.checked) { document.getElementById('brokenCheck').checked = false; document.getElementById('returnEquipSelect').value = ''; }">
-                                        <span style="color: var(--text-muted); font-size: 13px;"><strong style="color: var(--alert);">MARK AS LOST:</strong> I am replacing a lost item. (Skip Box 2)</span>
+                                        <span style="color: var(--text-muted); font-size: 13px;"><strong style="color: var(--alert);">MARK AS LOST:</strong> Replacing a lost item. (Skip Box 2)</span>
                                     </label>
                                 </div>
                             </div>
 
                             <div id="returnBlock" class="return-block dynamic-section">
-                                <label id="returnLabel" style="color:var(--accent); margin-bottom: 12px; font-weight: 700; font-size: 13px;">1. Previous Asset (Swap / Replace)</label>
+                                <label id="returnLabel" style="color:var(--accent); margin-bottom: 12px; font-weight: 700; font-size: 13px;">Gear Swap</label>
                                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                                     <select id="returnTierFilter" onchange="updateDropdown('return')" style="flex: 0 0 160px; padding: 14px 10px; font-weight: 600; background: rgba(0, 223, 115, 0.1); border-color: rgba(0, 223, 115, 0.3); color: var(--accent);">
                                         <option value="All">All Categories</option>
@@ -444,7 +444,7 @@
                                     <select id="returnEquipSelect" onchange="checkReturnTier()" style="flex: 1; padding: 14px;"><option value="">Loading hardware...</option></select>
                                 </div>
                                 <div id="returnSerialWrap" class="serial-field-wrap">
-                                    <label id="returnSerialLabel" style="color:var(--accent); font-weight:700;">2. Scan IN: Old Serial Number</label>
+                                    <label id="returnSerialLabel" style="color:var(--accent); font-weight:700;">3. Scan IN: Old Serial Number</label>
                                     <div class="input-wrap">
                                         <input type="text" id="returnSerialInput" placeholder="e.g. SPLICER-OLD-11234">
                                         <button type="button" class="cam-btn" style="color:var(--accent); border-color: rgba(0, 223, 115, 0.3); background: rgba(0, 223, 115, 0.1);" onclick="startScanner('returnSerialInput')" title="Scan Barcode">📷</button>
@@ -454,33 +454,33 @@
                                 <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
                                     <label id="brokenCheckWrap" class="checkbox-label" style="margin-top: 0;">
                                         <input type="checkbox" id="brokenCheck" onchange="if(this.checked) document.getElementById('lostCheck').checked = false;">
-                                        <span style="color: var(--text-muted); font-size: 13px;"><strong style="color: #f39c12;">MARK AS BROKEN:</strong> Unit is damaged (Goes to RMA).</span>
+                                        <span style="color: var(--text-muted); font-size: 13px;"><strong style="color: #f39c12;">MARK AS BROKEN:</strong> Unit is damaged (Goes to Trash).</span>
                                     </label>
                                 </div>
                             </div>
 
                             <div class="flag-block dynamic-section">
                                 <div class="form-group" style="margin-bottom: 0;">
-                                    <label style="color: #f39c12;">Flag Mentors & Supervisors</label>
+                                    <label style="color: #f39c12;">Flag</label>
                                     <label class="checkbox-label" style="color: #f39c12; margin-top: 15px;">
                                         <input type="checkbox" id="flagSupCheck" onchange="document.getElementById('supMessageWrap').style.display = this.checked ? 'block' : 'none';">
-                                        <span><strong>FLAG FOR REVIEW:</strong> Alert leadership to this transaction.</span>
+                                        <span><strong>Alert leadership to this Allocation.</span>
                                     </label>
                                 </div>
                                 <div id="supMessageWrap" style="display:none; margin-top: 15px;">
-                                    <textarea id="supMessageInput" rows="2" placeholder="Why are you flagging leadership? (e.g. 'Need approval for 3rd replacement this month')"></textarea>
+                                    <textarea id="supMessageInput" rows="2" placeholder="Why are you flagging leadership?"></textarea>
                                 </div>
                             </div>
 
                             <div class="notes-block dynamic-section">
                                 <div class="form-group" style="margin-bottom: 0; height: 100%; display: flex; flex-direction: column;">
-                                    <label style="color: var(--text-main);">Transaction Notes</label>
+                                    <label style="color: var(--text-main);">Allocation Notes</label>
                                     <textarea id="reasonInput" placeholder="Condition notes or reason for replacement..." required style="flex: 1; resize: vertical; min-height: 80px;"></textarea>
                                 </div>
                             </div>
                         </div> 
 
-                        <button type="submit" class="action-btn" id="submitBtnText">Process Transaction</button>
+                        <button type="submit" class="action-btn" id="submitBtnText">Process Allocation</button>
                     </form>
                 </div>
             </div>
@@ -499,7 +499,7 @@
                     <button class="action-btn secondary-btn" onclick="generateReport()" style="margin-top: 0; width: auto; white-space: nowrap; padding: 0 24px;">📄 Generate Report</button>
                 </div>
                 <table>
-                    <thead><tr><th>Timestamp</th><th>Technician</th><th>Transaction Record</th><th>Notes</th></tr></thead>
+                    <thead><tr><th>Timestamp</th><th>Technician</th><th>Allocation Record</th><th>Notes</th></tr></thead>
                     <tbody id="logsTableBody"><tr><td colspan="4">Loading records...</td></tr></tbody>
                 </table>
             </div>
@@ -734,8 +734,8 @@
         }
 
         function requireAdminPassword() {
-            const pass = prompt("Enter Supervisor Admin Password:");
-            if (pass === "Super2026") { switchTab('adminTab'); } 
+            const pass = prompt("Enter Admin Password:");
+            if (pass === "GunBros") { switchTab('adminTab'); } 
             else if (pass !== null) { showToast("Incorrect authorization password.", "error"); }
         }
 
