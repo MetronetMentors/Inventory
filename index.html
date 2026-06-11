@@ -135,13 +135,8 @@
             width: auto;
         }
         .cam-btn:hover { background: rgba(126, 63, 242, 0.2); transform: scale(1.02); }
-        
-        .tx-type-group { display: flex; gap: 15px; margin-bottom: 30px; background: rgba(255,255,255,0.02); padding: 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); }
-        .tx-type-group label { flex: 1; text-align: center; margin: 0; padding: 14px; cursor: pointer; border-radius: 8px; font-weight: 600; font-size: 14px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); }
-        .tx-type-group input[type="radio"] { display: none; }
-        .tx-type-group label:has(input:checked) { background: var(--primary); color: white; box-shadow: 0 8px 20px var(--primary-glow); transform: scale(1.02); }
 
-        .dynamic-section { animation: slideDown 0.3s ease; height: 100%; display: flex; flex-direction: column; }
+        .dynamic-section { height: 100%; display: flex; flex-direction: column; }
         .issue-block { background: linear-gradient(145deg, rgba(126, 63, 242, 0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(126, 63, 242, 0.15); padding: 25px; border-radius: 12px; }
         .return-block { background: linear-gradient(145deg, rgba(0, 223, 115, 0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(0, 223, 115, 0.15); padding: 25px; border-radius: 12px; transition: all 0.3s; }
         .flag-block { background: linear-gradient(145deg, rgba(243, 156, 18, 0.05) 0%, rgba(0,0,0,0) 100%); border: 1px solid rgba(243, 156, 18, 0.15); padding: 25px; border-radius: 12px; }
@@ -149,7 +144,7 @@
 
         .serial-field-wrap { display: none; margin-top: 20px; }
         
-        .checkbox-label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-size: 14px; color: var(--alert); text-transform: none; margin-top: 15px; font-weight: 500; line-height: 1.4; }
+        .checkbox-label { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-size: 14px; color: var(--alert); text-transform: none; font-weight: 500; line-height: 1.4; }
         .checkbox-label input { width: 20px; height: 20px; accent-color: var(--alert); cursor: pointer; flex-shrink: 0; margin-top: 0px; }
 
         button.action-btn { 
@@ -395,10 +390,6 @@
             <div id="issueTab" class="tab-content active">
                 <div class="app-card">
                     <h2>Log Field Transaction</h2>
-                    <div class="tx-type-group">
-                        <label><input type="radio" name="txType" value="swap" checked onchange="toggleTxMode()"> Issue / Swap Gear</label>
-                        <label><input type="radio" name="txType" value="return" onchange="toggleTxMode()"> Report Lost Tool</label>
-                    </div>
 
                     <form id="issueForm">
                         <div class="form-group">
@@ -417,7 +408,7 @@
                                         <option value="Clothing">Clothing</option>
                                         <option value="Ladders">Ladders</option>
                                     </select>
-                                    <select id="equipSelect" onchange="checkIssueTier()" style="flex: 2; padding: 14px;"><option value="">Loading hardware...</option></select>
+                                    <select id="equipSelect" onchange="checkIssueTier()" required style="flex: 2; padding: 14px;"><option value="">Loading hardware...</option></select>
                                 </div>
                                 <div id="issueSerialWrap" class="serial-field-wrap">
                                     <label style="color:var(--primary); font-weight:700;">2. Scan OUT: New Serial Number</label>
@@ -429,7 +420,7 @@
                             </div>
 
                             <div id="returnBlock" class="return-block dynamic-section">
-                                <label id="returnLabel" style="color:var(--accent); margin-bottom: 12px; font-weight: 700; font-size: 13px;">1. Returning Asset (Optional)</label>
+                                <label id="returnLabel" style="color:var(--accent); margin-bottom: 12px; font-weight: 700; font-size: 13px;">1. Previous Asset (Swap / Replace)</label>
                                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                                     <select id="returnTierFilter" onchange="updateDropdown('return')" style="flex: 1; padding: 14px; font-weight: 600; background: rgba(0, 223, 115, 0.1); border-color: rgba(0, 223, 115, 0.3); color: var(--accent);">
                                         <option value="All">All Categories</option>
@@ -447,10 +438,17 @@
                                         <button type="button" class="cam-btn" style="color:var(--accent); border-color: rgba(0, 223, 115, 0.3); background: rgba(0, 223, 115, 0.1);" onclick="startScanner('returnSerialInput')" title="Scan Barcode">📷</button>
                                     </div>
                                 </div>
-                                <label id="brokenCheckWrap" class="checkbox-label">
-                                    <input type="checkbox" id="brokenCheck">
-                                    <span style="color: var(--text-muted); font-size: 13px;"><strong style="color: var(--alert);">MARK AS BROKEN:</strong> Do not add to Active Stock.</span>
-                                </label>
+                                
+                                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                                    <label id="brokenCheckWrap" class="checkbox-label" style="margin-top: 0;">
+                                        <input type="checkbox" id="brokenCheck" onchange="if(this.checked) document.getElementById('lostCheck').checked = false;">
+                                        <span style="color: var(--text-muted); font-size: 13px;"><strong style="color: #f39c12;">MARK AS BROKEN:</strong> Unit is damaged (Goes to RMA).</span>
+                                    </label>
+                                    <label id="lostCheckWrap" class="checkbox-label" style="margin-top: 0;">
+                                        <input type="checkbox" id="lostCheck" onchange="if(this.checked) document.getElementById('brokenCheck').checked = false;">
+                                        <span style="color: var(--text-muted); font-size: 13px;"><strong style="color: var(--alert);">MARK AS LOST:</strong> Tech lost this item. Do not return to stock.</span>
+                                    </label>
+                                </div>
                             </div>
 
                             <div class="flag-block dynamic-section">
@@ -469,7 +467,7 @@
                             <div class="notes-block dynamic-section">
                                 <div class="form-group" style="margin-bottom: 0; height: 100%; display: flex; flex-direction: column;">
                                     <label style="color: var(--text-main);">Transaction Notes</label>
-                                    <textarea id="reasonInput" placeholder="Condition notes or reason for lost hardware..." required style="flex: 1; resize: vertical; min-height: 80px;"></textarea>
+                                    <textarea id="reasonInput" placeholder="Condition notes or reason for replacement..." required style="flex: 1; resize: vertical; min-height: 80px;"></textarea>
                                 </div>
                             </div>
                         </div> 
@@ -590,6 +588,15 @@
         let html5QrCode;
         let activeScanInput = '';
 
+        function formatCleanDate(rawDate) {
+            if (!rawDate) return "";
+            try {
+                let d = new Date(rawDate);
+                if (isNaN(d.getTime())) return rawDate; 
+                return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+            } catch(e) { return rawDate; }
+        }
+
         function showToast(message, type = "success") {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -605,51 +612,6 @@
         }
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-
-        function toggleTxMode() {
-            const mode = document.querySelector('input[name="txType"]:checked').value;
-            const issueBlock = document.getElementById('issueBlock');
-            const returnBlock = document.getElementById('returnBlock');
-            const btnText = document.getElementById('submitBtnText');
-            const equipSelect = document.getElementById('equipSelect');
-            const returnSelect = document.getElementById('returnEquipSelect');
-            const returnLabel = document.getElementById('returnLabel');
-            const returnSerialLabel = document.getElementById('returnSerialLabel');
-            const brokenWrap = document.getElementById('brokenCheckWrap');
-
-            if (mode === "return") { 
-                issueBlock.style.display = 'none';
-                returnBlock.style.display = 'block';
-                equipSelect.required = false;
-                returnSelect.required = true;
-                returnBlock.style.background = "linear-gradient(145deg, rgba(255, 71, 87, 0.05) 0%, rgba(0,0,0,0) 100%)";
-                returnBlock.style.borderColor = "rgba(255, 71, 87, 0.2)";
-                returnLabel.innerText = "Lost Hardware Record";
-                returnLabel.style.color = "var(--alert)";
-                returnSerialLabel.innerText = "Record LOST Serial Number";
-                returnSerialLabel.style.color = "var(--alert)";
-                brokenWrap.style.display = 'none'; 
-                btnText.innerHTML = "Record Lost Equipment";
-                btnText.style.background = "linear-gradient(135deg, var(--alert) 0%, #d63031 100%)";
-                btnText.style.boxShadow = "0 4px 15px rgba(255, 71, 87, 0.3)";
-            } 
-            else if (mode === "swap") { 
-                issueBlock.style.display = 'block';
-                returnBlock.style.display = 'block';
-                equipSelect.required = true;
-                returnSelect.required = false; 
-                returnBlock.style.background = "linear-gradient(145deg, rgba(0, 223, 115, 0.05) 0%, rgba(0,0,0,0) 100%)";
-                returnBlock.style.borderColor = "rgba(0, 223, 115, 0.15)";
-                returnLabel.innerText = "Returning Asset (Optional)";
-                returnLabel.style.color = "var(--accent)";
-                returnSerialLabel.innerText = "2. Scan IN: Old Serial Number";
-                returnSerialLabel.style.color = "var(--accent)";
-                brokenWrap.style.display = 'flex'; 
-                btnText.innerHTML = "Process Transaction";
-                btnText.style.background = "linear-gradient(135deg, var(--primary) 0%, #6025d4 100%)";
-                btnText.style.boxShadow = "0 4px 15px var(--primary-glow)";
-            }
-        }
 
         function updateDropdown(type) {
             let filterElement = type === 'issue' ? document.getElementById('issueTierFilter') : document.getElementById('returnTierFilter');
@@ -911,16 +873,14 @@
                     actionText = logItemStr.replace("Swap:", "").trim();
                 } else if(logItemStr.startsWith("Lost:")) {
                     actionBadge = `<span class="badge action-lost">LOST</span>`;
-                    actionText = logItemStr.replace("Lost:", "").trim();
+                    if (logItemStr.includes("➔ Issued:")) {
+                        actionText = logItemStr.replace("Lost:", "").trim(); 
+                    } else {
+                        actionText = logItemStr.replace("Lost:", "").trim();
+                    }
                 }
 
-                let displayDate = log.date || "";
-                try {
-                    let d = new Date(log.date);
-                    if(!isNaN(d.getTime())) {
-                        displayDate = d.toLocaleDateString() + " " + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    }
-                } catch(e) {}
+                let displayDate = formatCleanDate(log.date);
 
                 logTable.innerHTML += `<tr>
                     <td style="color:var(--text-muted); font-size:13px; font-weight: 500;">${displayDate}</td>
@@ -948,29 +908,40 @@
 
             currentFilteredLogs.forEach(log => {
                 let logItemStr = String(log.item || "");
-                let itemCost = 0;
                 let cleanItemName = "";
 
-                if(logItemStr.includes("Issued:")) {
-                    issued++;
+                if(logItemStr.includes("Issued:") && !logItemStr.includes("➔")) {
+                    issued++; 
                     cleanItemName = logItemStr.split("Issued:")[1] || "";
+                    cleanItemName = String(cleanItemName).trim();
+                    
+                    let matchedIssue = localInventory.find(i => i.name === cleanItemName);
+                    if(matchedIssue && matchedIssue.cost) { totalLiability += parseFloat(matchedIssue.cost) || 0; }
+                    
                 } else if(logItemStr.includes("Swap:")) {
-                    swapped++;
+                    swapped++; 
                     cleanItemName = logItemStr.split("➔")[1] || "";
+                    cleanItemName = String(cleanItemName).trim();
+                } else if(logItemStr.includes("Lost:") && logItemStr.includes("➔")) {
+                    lost++;
+                    let lostItemName = logItemStr.split("Lost:")[1].split("➔")[0].trim();
+                    cleanItemName = logItemStr.split("➔ Issued:")[1].trim(); 
+                    
+                    let matchLost = localInventory.find(i => i.name === lostItemName);
+                    if(matchLost && matchLost.cost) totalLosses += parseFloat(matchLost.cost) || 0;
+                    
+                    let matchIssue = localInventory.find(i => i.name === cleanItemName);
+                    if(matchIssue && matchIssue.cost) totalLiability += parseFloat(matchIssue.cost) || 0;
+                    
                 } else if(logItemStr.includes("Lost:")) {
                     lost++;
                     cleanItemName = logItemStr.split("Lost:")[1] || "";
+                    cleanItemName = String(cleanItemName).trim();
+                    let matchedAsset = localInventory.find(i => i.name === cleanItemName);
+                    if(matchedAsset && matchedAsset.cost) { totalLosses += parseFloat(matchedAsset.cost) || 0; }
                 }
                 
-                cleanItemName = String(cleanItemName).trim();
-
                 if(cleanItemName) {
-                    let matchedAsset = localInventory.find(i => i.name === cleanItemName);
-                    if(matchedAsset && matchedAsset.cost) { itemCost = parseFloat(matchedAsset.cost) || 0; }
-                    
-                    if(logItemStr.includes("Issued:")) totalLiability += itemCost;
-                    if(logItemStr.includes("Lost:")) totalLosses += itemCost;
-                    
                     itemCounts[cleanItemName] = (itemCounts[cleanItemName] || 0) + 1;
                 }
 
@@ -985,16 +956,14 @@
                     actionText = logItemStr.replace("Swap:", "").trim();
                 } else if(logItemStr.startsWith("Lost:")) {
                     actionBadge = `<span class="badge action-lost">LOST</span>`;
-                    actionText = logItemStr.replace("Lost:", "").trim();
+                    if (logItemStr.includes("➔ Issued:")) {
+                        actionText = logItemStr.replace("Lost:", "").trim();
+                    } else {
+                        actionText = logItemStr.replace("Lost:", "").trim();
+                    }
                 }
 
-                let displayDate = log.date || "";
-                try {
-                    let d = new Date(log.date);
-                    if(!isNaN(d.getTime())) {
-                        displayDate = d.toLocaleDateString() + " " + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    }
-                } catch(e) {}
+                let displayDate = formatCleanDate(log.date);
 
                 reportTableHTML += `<tr>
                     <td>${displayDate}</td>
@@ -1041,7 +1010,6 @@
 
         function closeReport() { document.getElementById('reportOverlay').style.display = 'none'; }
 
-        // --- NEW UPDATED ANALYTICS CHART ENGINE WITH TIME FILTERS & COST HOVER ---
         function renderAnalyticsChart() {
             const canvas = document.getElementById('checkoutChart');
             if (!canvas) return;
@@ -1055,24 +1023,25 @@
             localLogs.forEach(log => {
                 if(!log || log.tech === "SYSTEM") return;
 
-                // Process Time Filters
                 if (timeFilter !== 'all' && log.date) {
                     let logDate = new Date(log.date);
-                    if (isNaN(logDate.getTime())) return; 
-
-                    if (timeFilter === 'day') {
-                        if (logDate.toDateString() !== now.toDateString()) return;
-                    } else if (timeFilter === 'month') {
-                        if (logDate.getMonth() !== now.getMonth() || logDate.getFullYear() !== now.getFullYear()) return;
-                    } else if (timeFilter === 'year') {
-                        if (logDate.getFullYear() !== now.getFullYear()) return;
+                    if (!isNaN(logDate.getTime())) { 
+                        if (timeFilter === 'day') {
+                            if (logDate.toDateString() !== now.toDateString()) return;
+                        } else if (timeFilter === 'month') {
+                            if (logDate.getMonth() !== now.getMonth() || logDate.getFullYear() !== now.getFullYear()) return;
+                        } else if (timeFilter === 'year') {
+                            if (logDate.getFullYear() !== now.getFullYear()) return;
+                        }
                     }
                 }
 
                 let logItemStr = String(log.item || "");
                 let pulledItem = "";
+                
                 if (logItemStr.startsWith("Issued:")) pulledItem = logItemStr.split("Issued:")[1] || "";
                 else if (logItemStr.startsWith("Swap:") && logItemStr.includes("➔")) pulledItem = logItemStr.split("➔")[1] || "";
+                else if (logItemStr.startsWith("Lost:") && logItemStr.includes("➔ Issued:")) pulledItem = logItemStr.split("➔ Issued:")[1] || "";
                 
                 pulledItem = String(pulledItem).trim();
                 
@@ -1082,7 +1051,6 @@
                     }
                     checkoutData[pulledItem].count += 1;
                     
-                    // Attach the cost for the hover tooltip
                     let matchedAsset = localInventory.find(i => i.name === pulledItem);
                     if (matchedAsset && matchedAsset.cost) {
                         checkoutData[pulledItem].totalCost += parseFloat(matchedAsset.cost) || 0;
@@ -1115,7 +1083,7 @@
                 data: {
                     labels: topLabels,
                     datasets: [{
-                        label: 'Total Units Issued or Swapped Out',
+                        label: 'Total Units Pulled',
                         data: topData,
                         backgroundColor: gradient,
                         hoverBackgroundColor: '#9358F7',
@@ -1123,7 +1091,7 @@
                         borderWidth: 1,
                         borderRadius: 6,
                         barPercentage: 0.6,
-                        costData: topCosts // Hidden data array for the hover tooltip
+                        costData: topCosts 
                     }]
                 },
                 options: {
@@ -1176,13 +1144,13 @@
 
             if(!document.getElementById('spinnerAnim')) { document.body.insertAdjacentHTML('beforeend', '<style id="spinnerAnim">@keyframes spin { 100% { transform: rotate(360deg); } }</style>'); }
 
-            const mode = document.querySelector('input[name="txType"]:checked').value;
             const tName = document.getElementById('techSelect').value;
             const issueName = document.getElementById('equipSelect').value;
             const issueSerial = document.getElementById('issueSerialInput').value.trim();
             const returnName = document.getElementById('returnEquipSelect').value;
             const returnSerial = document.getElementById('returnSerialInput').value.trim();
             const isBroken = document.getElementById('brokenCheck').checked;
+            const isLost = document.getElementById('lostCheck').checked;
             const isFlagged = document.getElementById('flagSupCheck').checked;
             const supMsg = document.getElementById('supMessageInput').value;
             const rawNotes = document.getElementById('reasonInput').value;
@@ -1191,8 +1159,17 @@
             let finalNote = "";
             let returnToStockFlag = "false";
 
-            if (mode === "swap") {
-                if (returnName) {
+            if (returnName) {
+                if (isLost) {
+                    mainItemRecord = "Lost: " + returnName + " ➔ Issued: " + issueName;
+                    if(issueSerial) finalNote += "[S/N OUT: " + issueSerial + "] ";
+                    if(returnSerial) finalNote += "[S/N LOST: " + returnSerial + "] ";
+                    finalNote += rawNotes;
+                    if(isFlagged) finalNote += " 🚩 [FLAGGED FOR REVIEW]";
+                    returnToStockFlag = "false";
+                    
+                    for(let item of localInventory) { if(item.name === issueName) item.qty = Math.max(0, item.qty - 1); }
+                } else {
                     mainItemRecord = "Swap: " + returnName + " ➔ " + issueName;
                     if(issueSerial) finalNote += "[S/N OUT: " + issueSerial + "] ";
                     if(returnSerial) finalNote += "[S/N IN: " + returnSerial + "] ";
@@ -1200,20 +1177,17 @@
                     if(isBroken) finalNote += " [OLD UNIT TO RMA]";
                     if(isFlagged) finalNote += " 🚩 [FLAGGED FOR REVIEW]";
                     returnToStockFlag = isBroken ? "false" : "true";
+                    
                     for(let item of localInventory) { if(item.name === issueName) item.qty = Math.max(0, item.qty - 1); }
                     if(!isBroken) { for(let item of localInventory) { if(item.name === returnName) item.qty += 1; } }
-                } else {
-                    mainItemRecord = "Issued: " + issueName;
-                    finalNote = (issueSerial ? "[S/N OUT: " + issueSerial + "] " : "") + rawNotes;
-                    if(isFlagged) finalNote += " 🚩 [FLAGGED FOR REVIEW]";
-                    returnToStockFlag = "false";
-                    for(let item of localInventory) { if(item.name === issueName) item.qty = Math.max(0, item.qty - 1); }
                 }
-            } else if (mode === "return") { 
-                mainItemRecord = "Lost: " + returnName;
-                finalNote = (returnSerial ? "[S/N LOST: " + returnSerial + "] " : "") + rawNotes;
+            } else {
+                mainItemRecord = "Issued: " + issueName;
+                finalNote = (issueSerial ? "[S/N OUT: " + issueSerial + "] " : "") + rawNotes;
                 if(isFlagged) finalNote += " 🚩 [FLAGGED FOR REVIEW]";
-                returnToStockFlag = "false"; 
+                returnToStockFlag = "false";
+                
+                for(let item of localInventory) { if(item.name === issueName) item.qty = Math.max(0, item.qty - 1); }
             }
 
             localLogs.push({ date: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}), tech: tName, item: mainItemRecord, reason: finalNote });
@@ -1223,7 +1197,7 @@
             document.getElementById('returnSerialWrap').style.display = 'none';
 
             sendToGoogle({ 
-                action: "issueEquipment", techName: tName, mainItemName: mainItemRecord, logNote: finalNote, issueName: mode === "return" ? "" : issueName, returnName: mode === "swap" && !returnName ? "" : returnName, returnToStock: returnToStockFlag, flagSup: isFlagged ? "true" : "false", supMsg: supMsg
+                action: "issueEquipment", techName: tName, mainItemName: mainItemRecord, logNote: finalNote, issueName: issueName, returnName: returnName, returnToStock: returnToStockFlag, flagSup: isFlagged ? "true" : "false", supMsg: supMsg
             }).then(() => {
                 btn.innerText = originalText;
                 btn.style.opacity = '1';
@@ -1235,6 +1209,7 @@
                 document.getElementById('issueSerialInput').value = '';
                 document.getElementById('returnSerialInput').value = '';
                 document.getElementById('brokenCheck').checked = false;
+                document.getElementById('lostCheck').checked = false;
                 document.getElementById('flagSupCheck').checked = false;
                 document.getElementById('supMessageInput').value = '';
                 document.getElementById('supMessageWrap').style.display = 'none';
